@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './animal_list_page.dart' as animalList;
 
 class BarnList extends StatefulWidget {
   const BarnList({super.key});
@@ -16,10 +17,16 @@ class _BarnList extends State<BarnList> {
           title: const Text("Easy Barn"),
         ),
         body: Center(
-          child: ListView(children: const <ListTile>[
+          child: ListView(children: <ListTile>[
             ListTile(
               title: Text('Sterling Creek Farm'),
               subtitle: Text('Brush Prairie, Wa'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => animalList.AnimalList()));
+              },
             ),
             ListTile(
               title: Text('Whipple Creek Boarding Facility'),
