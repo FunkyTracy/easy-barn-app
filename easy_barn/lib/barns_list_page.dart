@@ -23,8 +23,8 @@ class _BarnList extends State<BarnList> {
             title: Text(barn.Name),
             subtitle: Text(barn.Address),
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => animalList.AnimalList()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (ctx) => animalList.AnimalList(name: barn.Name)));
             },
           ),
         );

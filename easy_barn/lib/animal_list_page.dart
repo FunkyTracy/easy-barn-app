@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'animal_class.dart' as animalClass;
 
 class AnimalList extends StatefulWidget {
-  const AnimalList({super.key});
+  final String name;
+
+  const AnimalList({super.key, required this.name});
 
   @override
   State<AnimalList> createState() => _AnimalList();
 }
 
 class _AnimalList extends State<AnimalList> {
-  List<animalClass.Animal> animals = animalClass.sterlingCreekAnimals
-      .map<animalClass.Animal>(animalClass.Animal.fromJson)
-      .toList();
+  List<animalClass.Animal> pickAnimalList(String barnName) {
+    if (barnName.contains('Sterling Creek')) {
+      return animalClass.sterlingCreekAnimals
+          .map<animalClass.Animal>(animalClass.Animal.fromJson)
+          .toList();
+    } else {
+      return animalClass.whippleCreekAnimals
+          .map<animalClass.Animal>(animalClass.Animal.fromJson)
+          .toList();
+    }
+  }
 
   Widget buildAnimals(List<animalClass.Animal> animals) => ListView.builder(
       itemCount: animals.length,
@@ -32,6 +42,6 @@ class _AnimalList extends State<AnimalList> {
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
         ),
-        body: Center(child: buildAnimals(animals)));
+        body: Center(child: buildAnimals(pickAnimalList(widget.name))));
   }
 }
