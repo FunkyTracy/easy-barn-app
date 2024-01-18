@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'animal_class.dart' as animalClass;
+import 'animal_detail_page.dart' as animalDetails;
 
 class AnimalList extends StatefulWidget {
   final String name;
@@ -32,6 +33,11 @@ class _AnimalList extends State<AnimalList> {
             child: ListTile(
           title: Text(animal.Name),
           subtitle: Text(animal.Owner),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    animalDetails.AnimalDetailPage(animal: animal)));
+          },
         ));
       });
 
