@@ -8,12 +8,12 @@ class Animal {
       Animal(Name: json['name'], Owner: json['owner']);
 }
 
-const SterlingCreekAnimals = [
+const sterlingCreekAnimals = [
   {'name': 'Smokey', 'owner': 'Ashlyn'},
   {'name': 'Wimpy', 'owner': 'Sandy'}
 ];
 
-const WhippleCreekAnimals = [
+const whippleCreekAnimals = [
   {'name': 'Casino', 'owner': 'Jennifer'},
   {'name': 'Cash', 'owner': 'Kristen'}
 ];

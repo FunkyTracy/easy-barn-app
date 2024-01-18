@@ -9,10 +9,9 @@ class AnimalList extends StatefulWidget {
 }
 
 class _AnimalList extends State<AnimalList> {
-  List<animalClass.Animal> animals =
-      animalClass.SterlingCreekAnimals.map<animalClass.Animal>(
-              animalClass.Animal.fromJson)
-          .toList();
+  List<animalClass.Animal> animals = animalClass.sterlingCreekAnimals
+      .map<animalClass.Animal>(animalClass.Animal.fromJson)
+      .toList();
 
   Widget buildAnimals(List<animalClass.Animal> animals) => ListView.builder(
       itemCount: animals.length,
@@ -28,6 +27,11 @@ class _AnimalList extends State<AnimalList> {
 
   @override
   Widget build(BuildContext ctx) {
-    return Center(child: buildAnimals(animals));
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlue.shade900,
+          title: const Text("Easy Barn"),
+        ),
+        body: Center(child: buildAnimals(animals)));
   }
 }

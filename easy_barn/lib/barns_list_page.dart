@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './animal_list_page.dart' as animalList;
+import 'barn_class.dart' as barnClass;
 
 class BarnList extends StatefulWidget {
   const BarnList({super.key});
@@ -9,6 +10,26 @@ class BarnList extends StatefulWidget {
 }
 
 class _BarnList extends State<BarnList> {
+  List<barnClass.Barn> barns =
+      barnClass.barns.map<barnClass.Barn>(barnClass.Barn.fromJson).toList();
+
+  Widget buildBarns(List<barnClass.Barn> barns) => ListView.builder(
+      itemCount: barns.length,
+      itemBuilder: (context, index) {
+        final barn = barns[index];
+
+        return Card(
+          child: ListTile(
+            title: Text(barn.Name),
+            subtitle: Text(barn.Address),
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => animalList.AnimalList()));
+            },
+          ),
+        );
+      });
+
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
@@ -16,23 +37,6 @@ class _BarnList extends State<BarnList> {
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
         ),
-        body: Center(
-          child: ListView(children: <ListTile>[
-            ListTile(
-              title: Text('Sterling Creek Farm'),
-              subtitle: Text('Brush Prairie, Wa'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) => animalList.AnimalList()));
-              },
-            ),
-            ListTile(
-              title: Text('Whipple Creek Boarding Facility'),
-              subtitle: Text('Ridgefield, WA'),
-            )
-          ]),
-        ));
+        body: Center(child: buildBarns(barns)));
   }
 }
