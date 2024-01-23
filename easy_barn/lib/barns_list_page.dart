@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './animal_list_page.dart' as animalList;
 import 'barn_class.dart' as barnClass;
+import 'main.dart' as main;
 
 class BarnList extends StatefulWidget {
   const BarnList({super.key});
@@ -23,6 +24,7 @@ class _BarnList extends State<BarnList> {
             title: Text(barn.Name),
             subtitle: Text(barn.Address),
             onTap: () {
+              main.MyApp.selectedBarn = barn;
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => animalList.AnimalList(name: barn.Name)));
             },

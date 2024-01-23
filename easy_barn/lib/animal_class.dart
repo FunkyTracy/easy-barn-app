@@ -53,6 +53,24 @@ const sterlingCreekAnimals = [
 ];
 
 const whippleCreekAnimals = [
-  {'name': 'Casino', 'owner': 'Jennifer'},
-  {'name': 'Cash', 'owner': 'Kristen'}
+  {
+    'name': 'Casino',
+    'owner': 'Jennifer',
+    'description': 'Chestnut Quarter Horse',
+    'stall': 'Stall #45',
+    'feeding': 'One baggie AM and PM',
+    'medications': 'None',
+    'vet': 'Unknown',
+    'farrier': 'Unknown'
+  },
+  {
+    'name': 'Cash',
+    'owner': 'Kristen',
+    'description': 'Sorrel Quarter Horse Paint',
+    'stall': 'Stall #61',
+    'feeding': 'One scoop LMF and one scoop haystack AM and PM',
+    'medications': 'None',
+    'vet': 'Unknown',
+    'farrier': 'Unknown'
+  }
 ];
