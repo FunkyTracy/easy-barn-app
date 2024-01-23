@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'animal_class.dart' as animalClass;
+import 'main.dart';
 
 class AnimalDetailPage extends StatefulWidget {
-  final animalClass.Animal animal;
-
-  const AnimalDetailPage({super.key, required this.animal});
+  const AnimalDetailPage({super.key});
 
   @override
   State<AnimalDetailPage> createState() => _AnimalDetailPage();
@@ -27,7 +25,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Name),
+                    title: Text(MyApp.selectedAnimal.Name),
                     subtitle: const Text("Animal Name"),
                   )),
               Padding(
@@ -35,7 +33,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Owner),
+                    title: Text(MyApp.selectedAnimal.Owner),
                     subtitle: const Text("Owner Name"),
                   )),
               Padding(
@@ -43,7 +41,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Description),
+                    title: Text(MyApp.selectedAnimal.Description),
                     subtitle: const Text("Description"),
                   )),
               Padding(
@@ -51,7 +49,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Stall),
+                    title: Text(MyApp.selectedAnimal.Stall),
                     subtitle: const Text("Stall Location"),
                   )),
               Padding(
@@ -59,7 +57,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.FeedingInstructions),
+                    title: Text(MyApp.selectedAnimal.FeedingInstructions),
                     subtitle: const Text("Feeding Instructions"),
                   )),
               Padding(
@@ -67,7 +65,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Medications),
+                    title: Text(MyApp.selectedAnimal.Medications),
                     subtitle: const Text("Medications"),
                   )),
               Padding(
@@ -75,7 +73,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Vet),
+                    title: Text(MyApp.selectedAnimal.Vet),
                     subtitle: const Text("Veterinarian"),
                   )),
               Padding(
@@ -83,7 +81,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.animal.Farrier),
+                    title: Text(MyApp.selectedAnimal.Farrier),
                     subtitle: const Text("Farrier"),
                   )),
             ]));

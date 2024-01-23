@@ -1,10 +1,10 @@
+import 'package:easy_barn/main.dart';
+
 import 'person_class.dart';
 import 'package:flutter/material.dart';
 
 class PersonDetailPage extends StatefulWidget {
-  final Person person;
-
-  const PersonDetailPage({super.key, required this.person});
+  const PersonDetailPage({super.key});
 
   @override
   State<PersonDetailPage> createState() => _PersonDetailPage();
@@ -27,7 +27,7 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.person.Name),
+                    title: Text(MyApp.selectedPerson.Name),
                     subtitle: const Text("Name"),
                   )),
               Padding(
@@ -35,7 +35,7 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.person.PhoneNumber),
+                    title: Text(MyApp.selectedPerson.PhoneNumber),
                     subtitle: const Text("Phone Number"),
                   )),
               Padding(
@@ -43,7 +43,7 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.person.EmergencyPerson),
+                    title: Text(MyApp.selectedPerson.EmergencyPerson),
                     subtitle: const Text("Emergency Contact Name"),
                   )),
               Padding(
@@ -51,7 +51,7 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.person.EmergencyNumber),
+                    title: Text(MyApp.selectedPerson.EmergencyNumber),
                     subtitle: const Text("Emergency Contact Phone Number"),
                   )),
             ]));

@@ -1,10 +1,8 @@
-import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 
 class BarnDetailPage extends StatefulWidget {
-  final Barn barn;
-
-  const BarnDetailPage({super.key, required this.barn});
+  const BarnDetailPage({super.key});
 
   @override
   State<BarnDetailPage> createState() => _BarnDetailPage();
@@ -27,7 +25,7 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.barn.Name),
+                    title: Text(MyApp.selectedBarn.Name),
                     subtitle: const Text("Barn Name"),
                   )),
               Padding(
@@ -35,7 +33,7 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.barn.Owner),
+                    title: Text(MyApp.selectedBarn.Owner),
                     subtitle: const Text("Barn Owner"),
                   )),
               Padding(
@@ -43,7 +41,7 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.barn.Address),
+                    title: Text(MyApp.selectedBarn.Address),
                     subtitle: const Text("Address"),
                   )),
               Padding(
@@ -51,7 +49,7 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: ListTile(
                     tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(widget.barn.PhoneNumber),
+                    title: Text(MyApp.selectedBarn.PhoneNumber),
                     subtitle: const Text("Phone Number"),
                   )),
             ]));

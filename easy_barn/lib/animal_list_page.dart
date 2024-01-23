@@ -1,8 +1,8 @@
 import 'package:easy_barn/barn_details_page.dart';
 import 'package:easy_barn/person_list.dart';
 import 'package:flutter/material.dart';
-import 'animal_class.dart' as animalClass;
-import 'animal_detail_page.dart' as animalDetails;
+import 'animal_class.dart';
+import 'animal_detail_page.dart';
 import 'main.dart' as main;
 
 class AnimalList extends StatefulWidget {
@@ -15,31 +15,19 @@ class AnimalList extends StatefulWidget {
 }
 
 class _AnimalList extends State<AnimalList> {
-  List<animalClass.Animal> pickAnimalList(String barnName) {
-    if (barnName.contains('Sterling Creek')) {
-      return animalClass.sterlingCreekAnimals
-          .map<animalClass.Animal>(animalClass.Animal.fromJson)
-          .toList();
-    } else {
-      return animalClass.whippleCreekAnimals
-          .map<animalClass.Animal>(animalClass.Animal.fromJson)
-          .toList();
-    }
-  }
-
-  Widget buildAnimals(List<animalClass.Animal> animals) => ListView.builder(
-      itemCount: animals.length,
+  Widget buildAnimals() => ListView.builder(
+      itemCount: main.MyApp.animals.length,
       itemBuilder: (context, index) {
-        final animal = animals[index];
+        final Animal animal = main.MyApp.animals[index];
 
         return Card(
             child: ListTile(
           title: Text(animal.Name),
           subtitle: Text(animal.Owner),
           onTap: () {
+            main.MyApp.selectedAnimal = animal;
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    animalDetails.AnimalDetailPage(animal: animal)));
+                builder: (context) => const AnimalDetailPage()));
           },
         ));
       });
@@ -63,8 +51,7 @@ class _AnimalList extends State<AnimalList> {
               title: const Text("Barn Information"),
               onTap: () {
                 Navigator.of(ctx).push(MaterialPageRoute(
-                    builder: (ctx) =>
-                        BarnDetailPage(barn: main.MyApp.selectedBarn)));
+                    builder: (ctx) => const BarnDetailPage()));
               },
             ),
             Divider(
@@ -75,8 +62,8 @@ class _AnimalList extends State<AnimalList> {
             ListTile(
               title: const Text("Barn Members"),
               onTap: () {
-                Navigator.of(ctx)
-                    .push(MaterialPageRoute(builder: (ctx) => PeopleList()));
+                Navigator.of(ctx).push(
+                    MaterialPageRoute(builder: (ctx) => const PeopleList()));
               },
             ),
             Divider(
@@ -86,6 +73,6 @@ class _AnimalList extends State<AnimalList> {
             ),
           ],
         ),
-        body: Center(child: buildAnimals(pickAnimalList(widget.name))));
+        body: Center(child: buildAnimals()));
   }
 }
