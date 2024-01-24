@@ -1,14 +1,14 @@
 class Animal {
-  final String Name;
-  final String Owner;
-  final String Description;
-  final String Stall;
-  final String FeedingInstructions;
-  final String Medications;
-  final String Vet;
-  final String Farrier;
+  String Name;
+  String Owner;
+  String Description;
+  String Stall;
+  String FeedingInstructions;
+  String Medications;
+  String Vet;
+  String Farrier;
 
-  const Animal(
+  Animal(
       {required this.Description,
       required this.Stall,
       required this.FeedingInstructions,

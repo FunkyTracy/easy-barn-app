@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       const Barn(Address: "", Name: "", Owner: "", PhoneNumber: "");
 
   static List<Animal> animals = List<Animal>.empty();
-  static Animal selectedAnimal = const Animal(
+  static Animal selectedAnimal = Animal(
       Description: "",
       Stall: "",
       FeedingInstructions: "",

@@ -1,6 +1,4 @@
 import 'package:easy_barn/main.dart';
-
-import 'person_class.dart';
 import 'package:flutter/material.dart';
 
 class PersonDetailPage extends StatefulWidget {

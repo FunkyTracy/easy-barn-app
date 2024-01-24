@@ -1,3 +1,4 @@
+import 'package:easy_barn/edit_animal_form.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -16,6 +17,19 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
         appBar: AppBar(
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  await Navigator.of(ctx).push(MaterialPageRoute(
+                      builder: (ctx) => const EditAnimalForm()));
+                  setState(() {});
+                },
+                child: Icon(Icons.edit),
+              ),
+            )
+          ],
         ),
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
