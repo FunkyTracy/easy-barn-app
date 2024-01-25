@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       Owner: "");
 
   static List<Person> people = List<Person>.empty();
-  static Person selectedPerson = const Person(
+  static Person selectedPerson = Person(
       Name: "", PhoneNumber: "", EmergencyPerson: "", EmergencyNumber: "");
 
   // This widget is the root of your application.
@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EasyBarn',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 226, 157, 30)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 226, 157, 30)),
         useMaterial3: true,
       ),
       home: const BarnListPage.BarnList(),

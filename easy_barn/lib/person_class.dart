@@ -1,10 +1,10 @@
 class Person {
-  final String Name;
-  final String PhoneNumber;
-  final String EmergencyPerson;
-  final String EmergencyNumber;
+  String Name;
+  String PhoneNumber;
+  String EmergencyPerson;
+  String EmergencyNumber;
 
-  const Person(
+  Person(
       {required this.Name,
       required this.PhoneNumber,
       required this.EmergencyPerson,

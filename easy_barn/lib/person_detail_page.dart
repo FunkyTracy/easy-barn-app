@@ -1,3 +1,4 @@
+import 'package:easy_barn/edit_person_form.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +17,24 @@ class _PersonDetailPage extends State<PersonDetailPage> {
         appBar: AppBar(
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  await Navigator.of(ctx).push(MaterialPageRoute(
+                      builder: (ctx) => const EditPersonForm()));
+                  setState(() {});
+                },
+                child: const Icon(Icons.edit),
+              ),
+            )
+          ],
         ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+        body: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -52,6 +67,6 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                     title: Text(MyApp.selectedPerson.EmergencyNumber),
                     subtitle: const Text("Emergency Contact Phone Number"),
                   )),
-            ]));
+            ])));
   }
 }
