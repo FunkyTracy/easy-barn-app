@@ -1,5 +1,9 @@
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+
+// '[^\s!@#\$%^&*(){}[]:;\'"<>?/\\_]+'
 
 class EditAnimalForm extends StatefulWidget {
   const EditAnimalForm({super.key});
@@ -11,10 +15,12 @@ class EditAnimalForm extends StatefulWidget {
 }
 
 class _EditAnimalForm extends State<EditAnimalForm> {
-  final _animalFormKey = GlobalKey<FormState>();
+  final _animalFormKey = GlobalKey<FormBuilderState>();
 
   //controllers for the form fields
   final nameController = TextEditingController(text: MyApp.selectedAnimal.Name);
+
+  bool _nameHasError = false;
 
   @override
   void dispose() {
@@ -25,42 +31,69 @@ class _EditAnimalForm extends State<EditAnimalForm> {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
-          title: const Text("Easy Barn"),
-        ),
-        body: Form(
-            key: _animalFormKey,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: TextFormField(
-                      controller: nameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a value';
-                        }
-                        //regex pattern doesn't work
-                        if (value.contains(RegExp(r'[^&!;:%\$<>/\\?[]{}@#]'))) {
-                          return 'Invalid entry';
-                        }
-                        return null;
-                      },
-                    )),
-                ElevatedButton(
-                    onPressed: () {
-                      if (_animalFormKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
-                          content: Text('Saving Changes'),
-                          duration: Durations.short3,
-                        ));
-                        MyApp.selectedAnimal.Name = nameController.text;
-                        Navigator.of(ctx).maybePop();
-                      }
-                    },
-                    child: const Text('Save'))
-              ],
-            )));
+        body: SingleChildScrollView(
+            child: Column(children: <Widget>[
+      FormBuilder(
+          key: _animalFormKey,
+          onChanged: () {
+            _animalFormKey.currentState!.save();
+          },
+          initialValue: {
+            'name': MyApp.selectedAnimal.Name,
+          },
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 15),
+              FormBuilderTextField(
+                name: 'name',
+                autovalidateMode: AutovalidateMode.always,
+                decoration: InputDecoration(
+                    labelText: 'Animal Name',
+                    suffixIcon: _nameHasError
+                        ? const Icon(Icons.error, color: Colors.red)
+                        : const Icon(Icons.check, color: Colors.green)),
+                onChanged: (value) {
+                  setState(() {
+                    _nameHasError = !(_animalFormKey
+                            .currentState?.fields['name']
+                            ?.validate() ??
+                        false);
+                  });
+                  if (!_nameHasError) {
+                    MyApp.selectedAnimal.Name = value!;
+                  }
+                },
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.match('^[a-zA-Z -]+\$'),
+                  FormBuilderValidators.maxLength(40),
+                ]),
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
+              )
+            ],
+          )),
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (_animalFormKey.currentState?.saveAndValidate() ?? false) {
+                  debugPrint(_animalFormKey.currentState?.value.toString());
+                  Navigator.of(ctx).maybePop();
+                } else {
+                  debugPrint(_animalFormKey.currentState?.value.toString());
+                  debugPrint('validation failed');
+                }
+              },
+              child: const Text(
+                'Save',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      )
+    ])));
   }
 }

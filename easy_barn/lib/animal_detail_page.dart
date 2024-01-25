@@ -19,14 +19,14 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
           title: const Text("Easy Barn"),
           actions: <Widget>[
             Padding(
-              padding: EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 10),
               child: GestureDetector(
                 onTap: () async {
                   await Navigator.of(ctx).push(MaterialPageRoute(
                       builder: (ctx) => const EditAnimalForm()));
                   setState(() {});
                 },
-                child: Icon(Icons.edit),
+                child: const Icon(Icons.edit),
               ),
             )
           ],

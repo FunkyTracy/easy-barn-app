@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'EasyBarn',
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 226, 157, 30)),
+            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 226, 157, 30)),
         useMaterial3: true,
       ),
       home: const BarnListPage.BarnList(),
