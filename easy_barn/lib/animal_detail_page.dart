@@ -31,9 +31,10 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
             )
           ],
         ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+        body: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -98,6 +99,6 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                     title: Text(MyApp.selectedAnimal.Farrier),
                     subtitle: const Text("Farrier"),
                   )),
-            ]));
+            ])));
   }
 }
