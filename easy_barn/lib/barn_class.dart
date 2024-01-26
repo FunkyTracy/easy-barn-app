@@ -1,10 +1,10 @@
 class Barn {
-  final String Name;
-  final String Owner;
-  final String Address;
-  final String PhoneNumber;
+  String Name;
+  String Owner;
+  String Address;
+  String PhoneNumber;
 
-  const Barn(
+  Barn(
       {required this.Address,
       required this.Name,
       required this.Owner,

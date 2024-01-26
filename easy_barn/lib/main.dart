@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   //hardcoded barns in barn_class
   static List<Barn> barnList = barns.map<Barn>(Barn.fromJson).toList();
   static Barn selectedBarn =
-      const Barn(Address: "", Name: "", Owner: "", PhoneNumber: "");
+      Barn(Address: "", Name: "", Owner: "", PhoneNumber: "");
 
   static List<Animal> animals = List<Animal>.empty();
   static Animal selectedAnimal = Animal(

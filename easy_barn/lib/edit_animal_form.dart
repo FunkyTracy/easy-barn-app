@@ -71,7 +71,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z -]+'),
+                  FormBuilderValidators.match('^[a-zA-Z \t\n-]+\$'),
                   FormBuilderValidators.maxLength(40),
                 ]),
                 keyboardType: TextInputType.name,
@@ -99,7 +99,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z -]+'),
+                  FormBuilderValidators.match('^[a-zA-Z \t\n-]+\$'),
                   FormBuilderValidators.maxLength(40),
                 ]),
                 keyboardType: TextInputType.name,
@@ -127,7 +127,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(100),
                 ]),
                 keyboardType: TextInputType.multiline,
@@ -155,7 +155,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(100),
                 ]),
                 keyboardType: TextInputType.multiline,
@@ -183,7 +183,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(100),
                 ]),
                 keyboardType: TextInputType.multiline,
@@ -211,7 +211,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(100),
                 ]),
                 keyboardType: TextInputType.multiline,
@@ -238,7 +238,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(70),
                 ]),
                 keyboardType: TextInputType.multiline,
@@ -266,7 +266,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t-(),\.]+'),
+                  FormBuilderValidators.match('^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
                   FormBuilderValidators.maxLength(50),
                 ]),
                 keyboardType: TextInputType.multiline,

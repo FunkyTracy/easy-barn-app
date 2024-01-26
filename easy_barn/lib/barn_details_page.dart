@@ -1,3 +1,4 @@
+import 'package:easy_barn/edit_barn_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,19 @@ class _BarnDetailPage extends State<BarnDetailPage> {
         appBar: AppBar(
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  await Navigator.of(ctx).push(MaterialPageRoute(
+                      builder: (ctx) => const EditBarnForm()));
+                  setState(() {});
+                },
+                child: const Icon(Icons.edit),
+              ),
+            )
+          ],
         ),
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

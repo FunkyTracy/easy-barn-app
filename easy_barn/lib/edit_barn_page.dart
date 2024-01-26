@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class EditPersonForm extends StatefulWidget {
-  const EditPersonForm({super.key});
+class EditBarnForm extends StatefulWidget {
+  const EditBarnForm({super.key});
 
   @override
-  State<EditPersonForm> createState() {
-    return _EditPersonForm();
+  State<EditBarnForm> createState() {
+    return _EditBarnForm();
   }
 }
 
-class _EditPersonForm extends State<EditPersonForm> {
-  final _personFormKey = GlobalKey<FormBuilderState>();
+class _EditBarnForm extends State<EditBarnForm> {
+  final _barnFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
   bool _phoneHasError = false;
-  bool _emergencyPersonHasError = false;
-  bool _emergencyPhoneHasError = false;
+  bool _addressHasError = false;
+  bool _ownerHasError = false;
 
   @override
   Widget build(BuildContext ctx) {
@@ -26,15 +26,15 @@ class _EditPersonForm extends State<EditPersonForm> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
       FormBuilder(
-          key: _personFormKey,
+          key: _barnFormKey,
           onChanged: () {
-            _personFormKey.currentState!.save();
+            _barnFormKey.currentState!.save();
           },
           initialValue: {
-            'name': MyApp.selectedPerson.Name,
-            'phone': MyApp.selectedPerson.PhoneNumber,
-            'emergency_person': MyApp.selectedPerson.EmergencyPerson,
-            'emergency_number': MyApp.selectedPerson.EmergencyNumber,
+            'name': MyApp.selectedBarn.Name,
+            'phone': MyApp.selectedBarn.PhoneNumber,
+            'address': MyApp.selectedBarn.Address,
+            'owner': MyApp.selectedBarn.Owner,
           },
           child: Column(
             children: <Widget>[
@@ -50,13 +50,12 @@ class _EditPersonForm extends State<EditPersonForm> {
                         : const Icon(Icons.check, color: Colors.green)),
                 onChanged: (value) {
                   setState(() {
-                    _nameHasError = !(_personFormKey
-                            .currentState?.fields['name']
+                    _nameHasError = !(_barnFormKey.currentState?.fields['name']
                             ?.validate() ??
                         false);
                   });
                   if (!_nameHasError) {
-                    MyApp.selectedPerson.Name = value!;
+                    MyApp.selectedBarn.Name = value!;
                   }
                 },
                 validator: FormBuilderValidators.compose([
@@ -78,13 +77,13 @@ class _EditPersonForm extends State<EditPersonForm> {
                         : const Icon(Icons.check, color: Colors.green)),
                 onChanged: (value) {
                   setState(() {
-                    _phoneHasError = !(_personFormKey
+                    _phoneHasError = !(_barnFormKey
                             .currentState?.fields['phone']
                             ?.validate() ??
                         false);
                   });
                   if (!_phoneHasError) {
-                    MyApp.selectedPerson.PhoneNumber = value!;
+                    MyApp.selectedBarn.PhoneNumber = value!;
                   }
                 },
                 validator: FormBuilderValidators.compose([
@@ -97,60 +96,59 @@ class _EditPersonForm extends State<EditPersonForm> {
                 textInputAction: TextInputAction.next,
               ),
               FormBuilderTextField(
-                name: 'emergency_person',
+                name: 'address',
                 maxLines: null,
                 autovalidateMode: AutovalidateMode.always,
                 decoration: InputDecoration(
-                    labelText: 'Emergency Contact',
-                    suffixIcon: _emergencyPersonHasError
+                    labelText: 'Address',
+                    suffixIcon: _addressHasError
                         ? const Icon(Icons.error, color: Colors.red)
                         : const Icon(Icons.check, color: Colors.green)),
                 onChanged: (value) {
                   setState(() {
-                    _emergencyPersonHasError = !(_personFormKey
-                            .currentState?.fields['emergency_person']
+                    _addressHasError = !(_barnFormKey
+                            .currentState?.fields['address']
                             ?.validate() ??
                         false);
                   });
-                  if (!_emergencyPersonHasError) {
-                    MyApp.selectedPerson.EmergencyPerson = value!;
+                  if (!_addressHasError) {
+                    MyApp.selectedBarn.Address = value!;
                   }
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match('^[a-zA-Z \n\t\-]+\$'),
-                  FormBuilderValidators.maxLength(30),
+                  FormBuilderValidators.match('^[a-zA-Z0-9\., \n\t\-]+\$'),
+                  FormBuilderValidators.maxLength(60),
                 ]),
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.streetAddress,
                 textInputAction: TextInputAction.next,
               ),
               FormBuilderTextField(
-                name: 'emergency_number',
+                name: 'owner',
                 maxLines: null,
                 autovalidateMode: AutovalidateMode.always,
                 decoration: InputDecoration(
-                    labelText: 'Emergency Contact Phone Number',
-                    suffixIcon: _emergencyPhoneHasError
+                    labelText: 'Barn Owner',
+                    suffixIcon: _ownerHasError
                         ? const Icon(Icons.error, color: Colors.red)
                         : const Icon(Icons.check, color: Colors.green)),
                 onChanged: (value) {
                   setState(() {
-                    _emergencyPhoneHasError = !(_personFormKey
-                            .currentState?.fields['emergency_number']
+                    _ownerHasError = !(_barnFormKey
+                            .currentState?.fields['owner']
                             ?.validate() ??
                         false);
                   });
-                  if (!_emergencyPhoneHasError) {
-                    MyApp.selectedPerson.EmergencyNumber = value!;
+                  if (!_ownerHasError) {
+                    MyApp.selectedBarn.Owner = value!;
                   }
                 },
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
-                  FormBuilderValidators.match(
-                      '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
-                  FormBuilderValidators.maxLength(16),
+                  FormBuilderValidators.match('^[a-zA-Z \-]+\$'),
+                  FormBuilderValidators.maxLength(30),
                 ]),
-                keyboardType: TextInputType.multiline,
+                keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
               ),
             ],
@@ -160,11 +158,11 @@ class _EditPersonForm extends State<EditPersonForm> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                if (_personFormKey.currentState?.saveAndValidate() ?? false) {
-                  debugPrint(_personFormKey.currentState?.value.toString());
+                if (_barnFormKey.currentState?.saveAndValidate() ?? false) {
+                  debugPrint(_barnFormKey.currentState?.value.toString());
                   Navigator.of(ctx).maybePop();
                 } else {
-                  debugPrint(_personFormKey.currentState?.value.toString());
+                  debugPrint(_barnFormKey.currentState?.value.toString());
                   debugPrint('validation failed');
                 }
               },
