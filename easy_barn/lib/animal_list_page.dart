@@ -76,8 +76,8 @@ class _AnimalList extends State<AnimalList> {
         body: Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/pexels-pixabay-235725.jpg'),
+                    image: AssetImage(
+                        'assets/images/pexels-ahmet-çığşar-17406674.jpg'),
                     fit: BoxFit.cover,
                     opacity: 0.5)),
             child: buildAnimals()));

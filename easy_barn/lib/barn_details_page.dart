@@ -13,9 +13,8 @@ class _BarnDetailPage extends State<BarnDetailPage> {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 17, 59, 94),
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
+          backgroundColor: Color.fromARGB(255, 66, 151, 193),
           title: const Text("Easy Barn"),
           actions: <Widget>[
             Padding(
@@ -31,41 +30,42 @@ class _BarnDetailPage extends State<BarnDetailPage> {
             )
           ],
         ),
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/pexels-pixabay-235725.jpg'),
+                    fit: BoxFit.cover,
+                    opacity: 0.5)),
+            child: ListView(children: [
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedBarn.Name),
-                    subtitle: const Text("Barn Name"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedBarn.Name),
+                subtitle: const Text("Barn Name"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedBarn.Owner),
-                    subtitle: const Text("Barn Owner"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedBarn.Owner),
+                subtitle: const Text("Barn Owner"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedBarn.Address),
-                    subtitle: const Text("Address"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedBarn.Address),
+                subtitle: const Text("Address"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedBarn.PhoneNumber),
-                    subtitle: const Text("Phone Number"),
-                  )),
-            ]));
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedBarn.PhoneNumber),
+                subtitle: const Text("Phone Number"),
+              )),
+            ])));
   }
 }
