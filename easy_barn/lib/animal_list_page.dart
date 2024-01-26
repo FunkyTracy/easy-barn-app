@@ -73,6 +73,13 @@ class _AnimalList extends State<AnimalList> {
             ),
           ],
         ),
-        body: Center(child: buildAnimals()));
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/pexels-pixabay-235725.jpg'),
+                    fit: BoxFit.cover,
+                    opacity: 0.5)),
+            child: buildAnimals()));
   }
 }

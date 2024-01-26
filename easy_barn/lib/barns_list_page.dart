@@ -58,6 +58,13 @@ class _BarnList extends State<BarnList> {
           backgroundColor: Colors.lightBlue.shade900,
           title: const Text("Easy Barn"),
         ),
-        body: Center(child: buildBarns(main.MyApp.barnList)));
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/pexels-brandon-randolph-2042161.jpg'),
+                    fit: BoxFit.cover,
+                    opacity: 0.5)),
+            child: buildBarns(main.MyApp.barnList)));
   }
 }
