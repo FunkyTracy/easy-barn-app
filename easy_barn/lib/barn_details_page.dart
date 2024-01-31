@@ -1,6 +1,7 @@
 import 'package:easy_barn/edit_barn_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BarnDetailPage extends StatefulWidget {
   const BarnDetailPage({super.key});
@@ -14,8 +15,15 @@ class _BarnDetailPage extends State<BarnDetailPage> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 66, 151, 193),
-          title: const Text("Easy Barn"),
+          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          title: Text(
+            "Easy Barn",
+            style: GoogleFonts.bitter(
+                textStyle: const TextStyle(
+                    color: Color.fromARGB(255, 244, 221, 177),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600)),
+          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -25,7 +33,10 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                       builder: (ctx) => const EditBarnForm()));
                   setState(() {});
                 },
-                child: const Icon(Icons.edit),
+                child: const Icon(
+                  Icons.edit,
+                  color: Color.fromARGB(255, 244, 221, 177),
+                ),
               ),
             )
           ],

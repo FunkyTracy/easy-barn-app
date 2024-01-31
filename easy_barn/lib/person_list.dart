@@ -1,5 +1,6 @@
 import 'package:easy_barn/person_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'main.dart' as main;
 
 class PeopleList extends StatefulWidget {
@@ -32,9 +33,23 @@ class _PeopleList extends State<PeopleList> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
-          title: const Text("Easy Barn"),
+          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          title: Text(
+            "Easy Barn",
+            style: GoogleFonts.bitter(
+                textStyle: const TextStyle(
+                    color: Color.fromARGB(255, 244, 221, 177),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600)),
+          ),
         ),
-        body: Center(child: buildPeopleList()));
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/pexels-turuncu-sakal-19228336.jpg'),
+                    fit: BoxFit.cover,
+                    opacity: 0.5)),
+            child: buildPeopleList()));
   }
 }

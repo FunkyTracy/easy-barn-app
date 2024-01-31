@@ -1,6 +1,7 @@
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './animal_list_page.dart' as animalList;
 import 'barn_class.dart' as barnClass;
 import 'main.dart' as main;
@@ -55,8 +56,15 @@ class _BarnList extends State<BarnList> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
-          title: const Text("Easy Barn"),
+          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          title: Text(
+            "Easy Barn",
+            style: GoogleFonts.bitter(
+                textStyle: const TextStyle(
+                    color: Color.fromARGB(255, 244, 221, 177),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600)),
+          ),
         ),
         body: Container(
             decoration: const BoxDecoration(

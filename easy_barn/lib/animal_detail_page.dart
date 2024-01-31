@@ -1,5 +1,6 @@
 import 'package:easy_barn/edit_animal_form.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'main.dart';
 
 class AnimalDetailPage extends StatefulWidget {
@@ -13,10 +14,17 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 17, 59, 94),
+        backgroundColor: Color.fromARGB(255, 244, 221, 177),
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
-          title: const Text("Easy Barn"),
+          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          title: Text(
+            "Easy Barn",
+            style: GoogleFonts.bitter(
+                textStyle: const TextStyle(
+                    color: Color.fromARGB(255, 244, 221, 177),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600)),
+          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -26,7 +34,10 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                       builder: (ctx) => const EditAnimalForm()));
                   setState(() {});
                 },
-                child: const Icon(Icons.edit),
+                child: const Icon(
+                  Icons.edit,
+                  color: Color.fromARGB(255, 244, 221, 177),
+                ),
               ),
             )
           ],
@@ -35,70 +46,62 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Name),
-                    subtitle: const Text("Animal Name"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Name),
+                subtitle: const Text("Animal Name"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Owner),
-                    subtitle: const Text("Owner Name"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Owner),
+                subtitle: const Text("Owner Name"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Description),
-                    subtitle: const Text("Description"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Description),
+                subtitle: const Text("Description"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Stall),
-                    subtitle: const Text("Stall Location"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Stall),
+                subtitle: const Text("Stall Location"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.FeedingInstructions),
-                    subtitle: const Text("Feeding Instructions"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.FeedingInstructions),
+                subtitle: const Text("Feeding Instructions"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Medications),
-                    subtitle: const Text("Medications"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Medications),
+                subtitle: const Text("Medications"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Vet),
-                    subtitle: const Text("Veterinarian"),
-                  )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Vet),
+                subtitle: const Text("Veterinarian"),
+              )),
+              Card(
                   child: ListTile(
-                    tileColor: const Color.fromARGB(255, 233, 208, 135),
-                    title: Text(MyApp.selectedAnimal.Farrier),
-                    subtitle: const Text("Farrier"),
-                  )),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedAnimal.Farrier),
+                subtitle: const Text("Farrier"),
+              )),
             ])));
   }
 }

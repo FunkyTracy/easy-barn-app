@@ -1,6 +1,7 @@
 import 'package:easy_barn/barn_details_page.dart';
 import 'package:easy_barn/person_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'animal_class.dart';
 import 'animal_detail_page.dart';
 import 'main.dart' as main;
@@ -36,17 +37,32 @@ class _AnimalList extends State<AnimalList> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue.shade900,
-          title: const Text("Easy Barn"),
+          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          title: Text(
+            "Easy Barn",
+            style: GoogleFonts.bitter(
+                textStyle: const TextStyle(
+                    color: Color.fromARGB(255, 244, 221, 177),
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600)),
+          ),
         ),
         endDrawer: NavigationDrawer(
-          selectedIndex: 3,
           children: [
             SizedBox(
-                height: 100,
+                height: 80,
                 child: DrawerHeader(
-                    decoration: BoxDecoration(color: Colors.blueGrey.shade800),
-                    child: const Text('Menu'))),
+                    decoration:
+                        BoxDecoration(color: Color.fromARGB(255, 51, 91, 122)),
+                    child: Center(
+                        child: Text(
+                      'Menu',
+                      style: GoogleFonts.bitter(
+                          textStyle: const TextStyle(
+                              color: Color.fromARGB(255, 244, 221, 177),
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600)),
+                    )))),
             ListTile(
               title: const Text("Barn Information"),
               onTap: () {
