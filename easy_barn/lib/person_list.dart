@@ -18,8 +18,8 @@ class _PeopleList extends State<PeopleList> {
 
         return Card(
           child: ListTile(
-            title: Text(person.Name),
-            subtitle: Text(person.PhoneNumber),
+            title: Text(person.name),
+            subtitle: Text(person.phoneNumber),
             onTap: () {
               main.MyApp.selectedPerson = person;
               Navigator.of(ctx).push(MaterialPageRoute(

@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
   //hardcoded barns in barn_class
   static List<Barn> barnList = List<Barn>.empty();
   static Barn selectedBarn =
-      Barn(address: "", name: "", owner: "", phoneNumber: "");
+      Barn(id: "", address: "", name: "", owner: "", phoneNumber: "");
 
   static List<Animal> animals = List<Animal>.empty();
   static Animal selectedAnimal = Animal(
@@ -32,7 +32,11 @@ class MyApp extends StatefulWidget {
 
   static List<Person> people = List<Person>.empty();
   static Person selectedPerson = Person(
-      Name: "", PhoneNumber: "", EmergencyPerson: "", EmergencyNumber: "");
+      id: "",
+      name: "",
+      phoneNumber: "",
+      emergencyPerson: "",
+      emergencyNumber: "");
 
   @override
   State<MyApp> createState() => _MyApp();
@@ -63,7 +67,10 @@ class _MyApp extends State<MyApp> {
         await FirebaseFirestore.instance.collection('barns').get();
 
     for (QueryDocumentSnapshot barnDoc in qs.docs) {
-      Barn barn = Barn(address: "", name: "", owner: "", phoneNumber: "");
+      Barn barn =
+          Barn(id: "", address: "", name: "", owner: "", phoneNumber: "");
+
+      barn.id = barnDoc.id;
 
       Map<String, dynamic> item = barnDoc.data() as Map<String, dynamic>;
       barn.name = item['name'] ?? '';

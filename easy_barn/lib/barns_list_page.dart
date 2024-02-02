@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +27,47 @@ class _BarnList extends State<BarnList> {
     }
   }
 
-  void pickPeopleList() {
-    if (main.MyApp.selectedBarn.name.contains('Sterling Creek')) {
-      main.MyApp.people = sterlingPeople.map<Person>(Person.fromJson).toList();
+  Future<Person> getPersonFromId(DocumentReference personRef) async {
+    DocumentSnapshot personSnapshot = await personRef.get();
+
+    if (personSnapshot.exists) {
+      Map<String, dynamic> person =
+          personSnapshot.data() as Map<String, dynamic>;
+
+      Person personToReturn = Person(
+          id: personSnapshot.id,
+          name: person['name'] ?? '',
+          phoneNumber: person['number'] ?? '',
+          emergencyPerson: person['emergencyPerson'] ?? '',
+          emergencyNumber: person['emergencyNumber'] ?? '');
+      return personToReturn;
     } else {
-      main.MyApp.people = whipplePeople.map<Person>(Person.fromJson).toList();
+      return Person(
+          id: "",
+          name: "",
+          phoneNumber: "",
+          emergencyPerson: "",
+          emergencyNumber: "");
     }
+  }
+
+  Future<void> pickPeopleList() async {
+    QuerySnapshot qs = await FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .where('barnid',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .get();
+
+    List<Person> peopleTemp = [];
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Person person = await getPersonFromId(item['personid']);
+
+      peopleTemp.add(person);
+    }
+
+    main.MyApp.people = peopleTemp;
   }
 
   Widget buildBarns(List<barnClass.Barn> barns) => ListView.builder(
@@ -41,10 +79,10 @@ class _BarnList extends State<BarnList> {
           child: ListTile(
             title: Text(barn.name),
             subtitle: Text(barn.address),
-            onTap: () {
+            onTap: () async {
               main.MyApp.selectedBarn = barn;
               pickAnimalList(barn.name);
-              pickPeopleList();
+              await pickPeopleList();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => animalList.AnimalList(name: barn.name)));
             },

@@ -50,28 +50,28 @@ class _PersonDetailPage extends State<PersonDetailPage> {
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedPerson.Name),
+                title: Text(MyApp.selectedPerson.name),
                 subtitle: const Text("Name"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedPerson.PhoneNumber),
+                title: Text(MyApp.selectedPerson.phoneNumber),
                 subtitle: const Text("Phone Number"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedPerson.EmergencyPerson),
+                title: Text(MyApp.selectedPerson.emergencyPerson),
                 subtitle: const Text("Emergency Contact Name"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedPerson.EmergencyNumber),
+                title: Text(MyApp.selectedPerson.emergencyNumber),
                 subtitle: const Text("Emergency Contact Phone Number"),
               )),
             ])));

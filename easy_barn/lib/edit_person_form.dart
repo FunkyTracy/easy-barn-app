@@ -43,10 +43,10 @@ class _EditPersonForm extends State<EditPersonForm> {
                 _personFormKey.currentState!.save();
               },
               initialValue: {
-                'name': MyApp.selectedPerson.Name,
-                'phone': MyApp.selectedPerson.PhoneNumber,
-                'emergency_person': MyApp.selectedPerson.EmergencyPerson,
-                'emergency_number': MyApp.selectedPerson.EmergencyNumber,
+                'name': MyApp.selectedPerson.name,
+                'phone': MyApp.selectedPerson.phoneNumber,
+                'emergency_person': MyApp.selectedPerson.emergencyPerson,
+                'emergency_number': MyApp.selectedPerson.emergencyNumber,
               },
               child: Column(
                 children: <Widget>[
@@ -67,7 +67,7 @@ class _EditPersonForm extends State<EditPersonForm> {
                             false);
                       });
                       if (!_nameHasError) {
-                        MyApp.selectedPerson.Name = value!;
+                        MyApp.selectedPerson.name = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -95,7 +95,7 @@ class _EditPersonForm extends State<EditPersonForm> {
                             false);
                       });
                       if (!_phoneHasError) {
-                        MyApp.selectedPerson.PhoneNumber = value!;
+                        MyApp.selectedPerson.phoneNumber = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -124,7 +124,7 @@ class _EditPersonForm extends State<EditPersonForm> {
                             false);
                       });
                       if (!_emergencyPersonHasError) {
-                        MyApp.selectedPerson.EmergencyPerson = value!;
+                        MyApp.selectedPerson.emergencyPerson = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -152,7 +152,7 @@ class _EditPersonForm extends State<EditPersonForm> {
                             false);
                       });
                       if (!_emergencyPhoneHasError) {
-                        MyApp.selectedPerson.EmergencyNumber = value!;
+                        MyApp.selectedPerson.emergencyNumber = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
