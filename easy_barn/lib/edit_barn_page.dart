@@ -43,10 +43,10 @@ class _EditBarnForm extends State<EditBarnForm> {
                 _barnFormKey.currentState!.save();
               },
               initialValue: {
-                'name': MyApp.selectedBarn.Name,
-                'phone': MyApp.selectedBarn.PhoneNumber,
-                'address': MyApp.selectedBarn.Address,
-                'owner': MyApp.selectedBarn.Owner,
+                'name': MyApp.selectedBarn.name,
+                'phone': MyApp.selectedBarn.phoneNumber,
+                'address': MyApp.selectedBarn.address,
+                'owner': MyApp.selectedBarn.owner,
               },
               child: Column(
                 children: <Widget>[
@@ -67,7 +67,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                             false);
                       });
                       if (!_nameHasError) {
-                        MyApp.selectedBarn.Name = value!;
+                        MyApp.selectedBarn.name = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -95,7 +95,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                             false);
                       });
                       if (!_phoneHasError) {
-                        MyApp.selectedBarn.PhoneNumber = value!;
+                        MyApp.selectedBarn.phoneNumber = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -124,7 +124,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                             false);
                       });
                       if (!_addressHasError) {
-                        MyApp.selectedBarn.Address = value!;
+                        MyApp.selectedBarn.address = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -152,7 +152,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                             false);
                       });
                       if (!_ownerHasError) {
-                        MyApp.selectedBarn.Owner = value!;
+                        MyApp.selectedBarn.owner = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([

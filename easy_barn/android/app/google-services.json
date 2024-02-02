@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "364937274171",
+    "project_id": "easybarn-21756",
+    "storage_bucket": "easybarn-21756.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364937274171:android:10e158ee9f8e7c3666cd1e",
+        "android_client_info": {
+          "package_name": "com.example.easy_barn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVXqoBjgMClmePTzYlaMoWE16Ajt3Q0cg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

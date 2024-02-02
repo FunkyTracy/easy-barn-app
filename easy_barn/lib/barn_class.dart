@@ -1,20 +1,43 @@
 class Barn {
-  String Name;
-  String Owner;
-  String Address;
-  String PhoneNumber;
+  String name;
+  String owner;
+  String address;
+  String phoneNumber;
 
   Barn(
-      {required this.Address,
-      required this.Name,
-      required this.Owner,
-      required this.PhoneNumber});
+      {required this.address,
+      required this.name,
+      required this.owner,
+      required this.phoneNumber});
 
   static Barn fromJson(json) => Barn(
-      Address: json['address'],
-      Name: json['name'],
-      Owner: json['owner'],
-      PhoneNumber: json['phoneNumber']);
+      address: json['address'],
+      name: json['name'],
+      owner: json['owner'],
+      phoneNumber: json['phoneNumber']);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'address': address,
+      'name': name,
+      'owner': owner,
+      'number': phoneNumber
+    };
+  }
+
+  Barn.fromMap(Map<String, dynamic> barnMap)
+      : name = barnMap['name'],
+        address = barnMap['address'],
+        owner = barnMap['owner'].toString(),
+        phoneNumber = barnMap['number'];
+
+  factory Barn.fromFirestore(Map<String, dynamic> data) {
+    return Barn(
+        name: data['name'] ?? '',
+        address: data['address'],
+        owner: data['owner'],
+        phoneNumber: data['phoneNumber']);
+  }
 }
 
 const barns = [

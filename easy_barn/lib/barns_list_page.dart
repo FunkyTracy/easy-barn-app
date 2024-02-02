@@ -25,7 +25,7 @@ class _BarnList extends State<BarnList> {
   }
 
   void pickPeopleList() {
-    if (main.MyApp.selectedBarn.Name.contains('Sterling Creek')) {
+    if (main.MyApp.selectedBarn.name.contains('Sterling Creek')) {
       main.MyApp.people = sterlingPeople.map<Person>(Person.fromJson).toList();
     } else {
       main.MyApp.people = whipplePeople.map<Person>(Person.fromJson).toList();
@@ -39,14 +39,14 @@ class _BarnList extends State<BarnList> {
 
         return Card(
           child: ListTile(
-            title: Text(barn.Name),
-            subtitle: Text(barn.Address),
+            title: Text(barn.name),
+            subtitle: Text(barn.address),
             onTap: () {
               main.MyApp.selectedBarn = barn;
-              pickAnimalList(barn.Name);
+              pickAnimalList(barn.name);
               pickPeopleList();
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => animalList.AnimalList(name: barn.Name)));
+                  builder: (ctx) => animalList.AnimalList(name: barn.name)));
             },
           ),
         );

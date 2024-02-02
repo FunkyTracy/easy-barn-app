@@ -53,28 +53,28 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedBarn.Name),
+                title: Text(MyApp.selectedBarn.name),
                 subtitle: const Text("Barn Name"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedBarn.Owner),
+                title: Text(MyApp.selectedBarn.owner),
                 subtitle: const Text("Barn Owner"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedBarn.Address),
+                title: Text(MyApp.selectedBarn.address),
                 subtitle: const Text("Address"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedBarn.PhoneNumber),
+                title: Text(MyApp.selectedBarn.phoneNumber),
                 subtitle: const Text("Phone Number"),
               )),
             ])));
