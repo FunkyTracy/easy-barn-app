@@ -21,14 +21,15 @@ class MyApp extends StatefulWidget {
 
   static List<Animal> animals = List<Animal>.empty();
   static Animal selectedAnimal = Animal(
-      Description: "",
-      Stall: "",
-      FeedingInstructions: "",
-      Medications: "",
-      Vet: "",
-      Farrier: "",
-      Name: "",
-      Owner: "");
+      id: "",
+      description: "",
+      stall: "",
+      feedingInstructions: "",
+      medications: "",
+      vet: "",
+      farrier: "",
+      name: "",
+      owner: "");
 
   static List<Person> people = List<Person>.empty();
   static Person selectedPerson = Person(

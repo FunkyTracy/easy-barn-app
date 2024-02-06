@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/person_class.dart';
@@ -17,14 +15,46 @@ class BarnList extends StatefulWidget {
 }
 
 class _BarnList extends State<BarnList> {
-  void pickAnimalList(String barnName) {
-    if (barnName.contains('Sterling Creek')) {
-      main.MyApp.animals =
-          sterlingCreekAnimals.map<Animal>(Animal.fromJson).toList();
+  Future<String> getOwnerName(DocumentReference ownerRef) async {
+    DocumentSnapshot ownerSnapshot = await ownerRef.get();
+
+    if (ownerSnapshot.exists) {
+      Map<String, dynamic> owner = ownerSnapshot.data() as Map<String, dynamic>;
+
+      return owner['name'];
     } else {
-      main.MyApp.animals =
-          whippleCreekAnimals.map<Animal>(Animal.fromJson).toList();
+      return "Problem getting owner information";
     }
+  }
+
+  Future<void> pickAnimalList(String barnName) async {
+    QuerySnapshot qs = await FirebaseFirestore.instance
+        .collection('animals')
+        .where('barn',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .get();
+
+    List<Animal> animalsTemp = [];
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Animal temp = Animal(
+          id: doc.id,
+          description: item['description'] ?? "",
+          stall: item['stall'] ?? "",
+          feedingInstructions: item['feeding'] ?? "",
+          medications: item['medications'] ?? "",
+          vet: item['vet'] ?? "",
+          farrier: item['farrier'] ?? "",
+          name: item['name'] ?? "",
+          owner: "");
+
+      temp.owner = await getOwnerName(item['owner']);
+
+      animalsTemp.add(temp);
+    }
+
+    main.MyApp.animals = animalsTemp;
   }
 
   Future<Person> getPersonFromId(DocumentReference personRef) async {
@@ -81,7 +111,7 @@ class _BarnList extends State<BarnList> {
             subtitle: Text(barn.address),
             onTap: () async {
               main.MyApp.selectedBarn = barn;
-              pickAnimalList(barn.name);
+              await pickAnimalList(barn.name);
               await pickPeopleList();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => animalList.AnimalList(name: barn.name)));

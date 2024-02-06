@@ -23,8 +23,8 @@ class _AnimalList extends State<AnimalList> {
 
         return Card(
             child: ListTile(
-          title: Text(animal.Name),
-          subtitle: Text(animal.Owner),
+          title: Text(animal.name),
+          subtitle: Text(animal.owner),
           onTap: () {
             main.MyApp.selectedAnimal = animal;
             Navigator.of(context).push(MaterialPageRoute(

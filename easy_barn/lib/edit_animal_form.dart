@@ -49,14 +49,14 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 _animalFormKey.currentState!.save();
               },
               initialValue: {
-                'name': MyApp.selectedAnimal.Name,
-                'owner': MyApp.selectedAnimal.Owner,
-                'description': MyApp.selectedAnimal.Description,
-                'stall_location': MyApp.selectedAnimal.Stall,
-                'feeding': MyApp.selectedAnimal.FeedingInstructions,
-                'meds': MyApp.selectedAnimal.Medications,
-                'vet': MyApp.selectedAnimal.Vet,
-                'farrier': MyApp.selectedAnimal.Farrier
+                'name': MyApp.selectedAnimal.name,
+                'owner': MyApp.selectedAnimal.owner,
+                'description': MyApp.selectedAnimal.description,
+                'stall_location': MyApp.selectedAnimal.stall,
+                'feeding': MyApp.selectedAnimal.feedingInstructions,
+                'meds': MyApp.selectedAnimal.medications,
+                'vet': MyApp.selectedAnimal.vet,
+                'farrier': MyApp.selectedAnimal.farrier
               },
               child: Column(
                 children: <Widget>[
@@ -77,7 +77,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_nameHasError) {
-                        MyApp.selectedAnimal.Name = value!;
+                        MyApp.selectedAnimal.name = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -105,7 +105,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_ownerNameHasError) {
-                        MyApp.selectedAnimal.Owner = value!;
+                        MyApp.selectedAnimal.owner = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -133,7 +133,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_descriptionHasError) {
-                        MyApp.selectedAnimal.Description = value!;
+                        MyApp.selectedAnimal.description = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -162,13 +162,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_stallLocationHasError) {
-                        MyApp.selectedAnimal.Stall = value!;
+                        MyApp.selectedAnimal.stall = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.match(
-                          '^[a-zA-Z0-9 \n\t\(\),\.-]+\$'),
+                          '^[a-zA-Z0-9# \n\t\(\),\.-]+\$'),
                       FormBuilderValidators.maxLength(100),
                     ]),
                     keyboardType: TextInputType.multiline,
@@ -191,7 +191,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_feedingHasError) {
-                        MyApp.selectedAnimal.FeedingInstructions = value!;
+                        MyApp.selectedAnimal.feedingInstructions = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -220,7 +220,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_medicationHasError) {
-                        MyApp.selectedAnimal.Medications = value!;
+                        MyApp.selectedAnimal.medications = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -249,7 +249,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_vetHasError) {
-                        MyApp.selectedAnimal.Vet = value!;
+                        MyApp.selectedAnimal.vet = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -278,7 +278,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_farrierHasError) {
-                        MyApp.selectedAnimal.Farrier = value!;
+                        MyApp.selectedAnimal.farrier = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([

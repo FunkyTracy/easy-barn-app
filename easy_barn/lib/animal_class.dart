@@ -1,32 +1,24 @@
 class Animal {
-  String Name;
-  String Owner;
-  String Description;
-  String Stall;
-  String FeedingInstructions;
-  String Medications;
-  String Vet;
-  String Farrier;
+  String id;
+  String name;
+  String owner;
+  String description;
+  String stall;
+  String feedingInstructions;
+  String medications;
+  String vet;
+  String farrier;
 
   Animal(
-      {required this.Description,
-      required this.Stall,
-      required this.FeedingInstructions,
-      required this.Medications,
-      required this.Vet,
-      required this.Farrier,
-      required this.Name,
-      required this.Owner});
-
-  static Animal fromJson(json) => Animal(
-      Description: json['description'],
-      Stall: json['stall'],
-      FeedingInstructions: json['feeding'],
-      Medications: json['medications'],
-      Vet: json['vet'],
-      Farrier: json['farrier'],
-      Name: json['name'],
-      Owner: json['owner']);
+      {required this.id,
+      required this.description,
+      required this.stall,
+      required this.feedingInstructions,
+      required this.medications,
+      required this.vet,
+      required this.farrier,
+      required this.name,
+      required this.owner});
 }
 
 const sterlingCreekAnimals = [
