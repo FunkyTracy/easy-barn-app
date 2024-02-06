@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/main.dart';
 import 'package:easy_barn/person_class.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -198,6 +198,11 @@ class _EditBarnForm extends State<EditBarnForm> {
   }
 
   Future<void> updateBarnDatabase() async {
+    Barn temp = MyApp.barnList
+        .firstWhere((element) => element.id == MyApp.selectedBarn.id);
+    int index = MyApp.barnList.indexOf(temp);
+    MyApp.barnList[index] = MyApp.selectedBarn;
+
     FirebaseFirestore.instance
         .collection('barns')
         .doc(MyApp.selectedBarn.id)

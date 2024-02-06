@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
-import 'package:easy_barn/animal_list_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +103,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         suffixIcon: _ownerNameHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       setState(() {
                         _ownerNameHasError = !(_animalFormKey
                                 .currentState?.fields['owner']
@@ -111,11 +111,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_ownerNameHasError) {
-                        Person temp = MyApp.people.firstWhere((person) =>
-                            person.id == MyApp.selectedAnimal.ownerid);
-                        int index = MyApp.people.indexOf(temp);
-                        temp.name = value!;
-                        MyApp.people[index] = temp;
+                        await updatePersonLocal(value!);
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -309,7 +305,8 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   onPressed: () async {
                     if (_animalFormKey.currentState?.saveAndValidate() ??
                         false) {
-                      await updateAnimalList();
+                      await updateAnimals();
+                      await updatePersonDatabase();
                       debugPrint(_animalFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
@@ -328,14 +325,37 @@ class _EditAnimalForm extends State<EditAnimalForm> {
         ])));
   }
 
-  Future<void> updateAnimalList() async {
+  Future<void> updateAnimals() async {
     Animal found = MyApp.animals
         .firstWhere((element) => element.id == MyApp.selectedAnimal.id);
-
     int index = MyApp.animals.indexOf(found);
-
     MyApp.animals[index] = MyApp.selectedAnimal;
+
+    FirebaseFirestore.instance
+        .collection('animals')
+        .doc(MyApp.selectedAnimal.id)
+        .update(MyApp.selectedAnimal.toMap())
+        .then((value) => print('Updated successfully'))
+        .catchError((error) => print('Failed to update: $error'));
   }
 
-  Future<void> updateAnimalDatabase() async {}
+  Future<void> updatePersonLocal(String value) async {
+    Person temp = MyApp.people
+        .firstWhere((person) => person.id == MyApp.selectedAnimal.ownerid);
+    int index = MyApp.people.indexOf(temp);
+    temp.name = value;
+    MyApp.people[index] = temp;
+  }
+
+  Future<void> updatePersonDatabase() async {
+    Person temp = MyApp.people
+        .firstWhere((person) => person.id == MyApp.selectedAnimal.ownerid);
+
+    FirebaseFirestore.instance
+        .collection('people')
+        .doc(temp.id)
+        .update(temp.toMap())
+        .then((value) => print('Updated successfully'))
+        .catchError((error) => print('Failed to update: $error'));
+  }
 }
