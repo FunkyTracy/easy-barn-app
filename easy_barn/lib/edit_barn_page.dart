@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/main.dart';
+import 'package:easy_barn/person_class.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -46,7 +49,10 @@ class _EditBarnForm extends State<EditBarnForm> {
                 'name': MyApp.selectedBarn.name,
                 'phone': MyApp.selectedBarn.phoneNumber,
                 'address': MyApp.selectedBarn.address,
-                'owner': MyApp.selectedBarn.owner,
+                'owner': MyApp.people
+                    .firstWhere(
+                        (person) => person.id == MyApp.selectedBarn.ownerid)
+                    .name,
               },
               child: Column(
                 children: <Widget>[
@@ -144,7 +150,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                         suffixIcon: _ownerHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       setState(() {
                         _ownerHasError = !(_barnFormKey
                                 .currentState?.fields['owner']
@@ -152,7 +158,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                             false);
                       });
                       if (!_ownerHasError) {
-                        MyApp.selectedBarn.owner = value!;
+                        await updatePersonLocal(value!);
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -169,8 +175,10 @@ class _EditBarnForm extends State<EditBarnForm> {
             children: <Widget>[
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_barnFormKey.currentState?.saveAndValidate() ?? false) {
+                      await updateBarnDatabase();
+                      await updatePersonDatabase();
                       debugPrint(_barnFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
@@ -187,5 +195,34 @@ class _EditBarnForm extends State<EditBarnForm> {
             ],
           )
         ])));
+  }
+
+  Future<void> updateBarnDatabase() async {
+    FirebaseFirestore.instance
+        .collection('barns')
+        .doc(MyApp.selectedBarn.id)
+        .update(MyApp.selectedBarn.toMap())
+        .then((value) => print('Updated successfully'))
+        .catchError((error) => print('Failed to update: $error'));
+  }
+
+  Future<void> updatePersonLocal(String value) async {
+    Person temp = MyApp.people
+        .firstWhere((person) => person.id == MyApp.selectedBarn.ownerid);
+    int index = MyApp.people.indexOf(temp);
+    temp.name = value;
+    MyApp.people[index] = temp;
+  }
+
+  Future<void> updatePersonDatabase() async {
+    Person temp = MyApp.people
+        .firstWhere((person) => person.id == MyApp.selectedBarn.ownerid);
+
+    FirebaseFirestore.instance
+        .collection('people')
+        .doc(temp.id)
+        .update(temp.toMap())
+        .then((value) => print('Updated successfully'))
+        .catchError((error) => print('Failed to update: $error'));
   }
 }

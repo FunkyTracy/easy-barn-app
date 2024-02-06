@@ -24,11 +24,14 @@ class _AnimalList extends State<AnimalList> {
         return Card(
             child: ListTile(
           title: Text(animal.name),
-          subtitle: Text(animal.owner),
-          onTap: () {
+          subtitle: Text(main.MyApp.people
+              .firstWhere((person) => person.id == animal.ownerid)
+              .name),
+          onTap: () async {
             main.MyApp.selectedAnimal = animal;
-            Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const AnimalDetailPage()));
+            setState(() {});
           },
         ));
       });

@@ -57,7 +57,10 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.owner),
+                title: Text(MyApp.people
+                    .firstWhere(
+                        (person) => person.id == MyApp.selectedAnimal.ownerid)
+                    .name),
                 subtitle: const Text("Owner Name"),
               )),
               Card(

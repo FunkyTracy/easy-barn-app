@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/main.dart';
+import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -170,9 +172,11 @@ class _EditPersonForm extends State<EditPersonForm> {
             children: <Widget>[
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_personFormKey.currentState?.saveAndValidate() ??
                         false) {
+                      await updatePeopleList();
+                      await updatePersonDatabase();
                       debugPrint(_personFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
@@ -189,5 +193,23 @@ class _EditPersonForm extends State<EditPersonForm> {
             ],
           )
         ])));
+  }
+
+  Future<void> updatePeopleList() async {
+    Person found = MyApp.people
+        .firstWhere((element) => element.id == MyApp.selectedPerson.id);
+
+    int index = MyApp.people.indexOf(found);
+
+    MyApp.people[index] = MyApp.selectedPerson;
+  }
+
+  Future<void> updatePersonDatabase() async {
+    FirebaseFirestore.instance
+        .collection('people')
+        .doc(MyApp.selectedPerson.id)
+        .update(MyApp.selectedPerson.toMap())
+        .then((value) => print('Updated successfully'))
+        .catchError((error) => print('Failed to update: $error'));
   }
 }

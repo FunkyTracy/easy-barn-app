@@ -1,4 +1,7 @@
+import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/animal_list_page.dart';
 import 'package:easy_barn/main.dart';
+import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -50,7 +53,10 @@ class _EditAnimalForm extends State<EditAnimalForm> {
               },
               initialValue: {
                 'name': MyApp.selectedAnimal.name,
-                'owner': MyApp.selectedAnimal.owner,
+                'owner': MyApp.people
+                    .firstWhere(
+                        (person) => person.id == MyApp.selectedAnimal.ownerid)
+                    .name,
                 'description': MyApp.selectedAnimal.description,
                 'stall_location': MyApp.selectedAnimal.stall,
                 'feeding': MyApp.selectedAnimal.feedingInstructions,
@@ -105,7 +111,11 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             false);
                       });
                       if (!_ownerNameHasError) {
-                        MyApp.selectedAnimal.owner = value!;
+                        Person temp = MyApp.people.firstWhere((person) =>
+                            person.id == MyApp.selectedAnimal.ownerid);
+                        int index = MyApp.people.indexOf(temp);
+                        temp.name = value!;
+                        MyApp.people[index] = temp;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -296,9 +306,10 @@ class _EditAnimalForm extends State<EditAnimalForm> {
             children: <Widget>[
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_animalFormKey.currentState?.saveAndValidate() ??
                         false) {
+                      await updateAnimalList();
                       debugPrint(_animalFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
@@ -316,4 +327,15 @@ class _EditAnimalForm extends State<EditAnimalForm> {
           )
         ])));
   }
+
+  Future<void> updateAnimalList() async {
+    Animal found = MyApp.animals
+        .firstWhere((element) => element.id == MyApp.selectedAnimal.id);
+
+    int index = MyApp.animals.indexOf(found);
+
+    MyApp.animals[index] = MyApp.selectedAnimal;
+  }
+
+  Future<void> updateAnimalDatabase() async {}
 }

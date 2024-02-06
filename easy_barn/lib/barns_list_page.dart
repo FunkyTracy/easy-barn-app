@@ -15,19 +15,16 @@ class BarnList extends StatefulWidget {
 }
 
 class _BarnList extends State<BarnList> {
-  Future<String> getOwnerName(DocumentReference ownerRef) async {
+  Future<String> getAnimalOwner(DocumentReference ownerRef) async {
     DocumentSnapshot ownerSnapshot = await ownerRef.get();
-
     if (ownerSnapshot.exists) {
-      Map<String, dynamic> owner = ownerSnapshot.data() as Map<String, dynamic>;
-
-      return owner['name'];
+      return ownerSnapshot.id;
     } else {
-      return "Problem getting owner information";
+      return '';
     }
   }
 
-  Future<void> pickAnimalList(String barnName) async {
+  Future<void> pickAnimalList() async {
     QuerySnapshot qs = await FirebaseFirestore.instance
         .collection('animals')
         .where('barn',
@@ -47,9 +44,7 @@ class _BarnList extends State<BarnList> {
           vet: item['vet'] ?? "",
           farrier: item['farrier'] ?? "",
           name: item['name'] ?? "",
-          owner: "");
-
-      temp.owner = await getOwnerName(item['owner']);
+          ownerid: await getAnimalOwner(item['owner']));
 
       animalsTemp.add(temp);
     }
@@ -111,8 +106,8 @@ class _BarnList extends State<BarnList> {
             subtitle: Text(barn.address),
             onTap: () async {
               main.MyApp.selectedBarn = barn;
-              await pickAnimalList(barn.name);
               await pickPeopleList();
+              await pickAnimalList();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => animalList.AnimalList(name: barn.name)));
             },

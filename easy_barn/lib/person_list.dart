@@ -20,10 +20,11 @@ class _PeopleList extends State<PeopleList> {
           child: ListTile(
             title: Text(person.name),
             subtitle: Text(person.phoneNumber),
-            onTap: () {
+            onTap: () async {
               main.MyApp.selectedPerson = person;
-              Navigator.of(ctx).push(MaterialPageRoute(
+              await Navigator.of(ctx).push(MaterialPageRoute(
                   builder: (ctx) => const PersonDetailPage()));
+              setState(() {});
             },
           ),
         );
