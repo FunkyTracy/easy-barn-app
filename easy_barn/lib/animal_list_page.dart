@@ -1,4 +1,5 @@
 import 'package:easy_barn/barn_details_page.dart';
+import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/person_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -83,6 +84,31 @@ class _AnimalList extends State<AnimalList> {
               onTap: () {
                 Navigator.of(ctx).push(
                     MaterialPageRoute(builder: (ctx) => const PeopleList()));
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
+              title: const Text("Add New"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: const Text('Add New'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).push(MaterialPageRoute(
+                                      builder: (ctx) =>
+                                          const CreatePersonForm()));
+                                },
+                                child: const Text('Add Person'))
+                          ]);
+                    });
               },
             ),
             Divider(
