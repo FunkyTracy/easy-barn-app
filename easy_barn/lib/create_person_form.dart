@@ -25,10 +25,13 @@ class _CreatePersonForm extends State<CreatePersonForm> {
       emergencyPerson: "",
       emergencyNumber: "");
 
+  String barnId = '';
+
   bool _nameHasError = false;
   bool _phoneHasError = false;
   bool _emergencyPersonHasError = false;
   bool _emergencyPhoneHasError = false;
+  bool _barnHasError = false;
 
   @override
   Widget build(BuildContext ctx) {
@@ -167,6 +170,35 @@ class _CreatePersonForm extends State<CreatePersonForm> {
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.next,
                   ),
+                  FormBuilderDropdown(
+                    name: 'placement_barn',
+                    decoration: InputDecoration(
+                        labelText: 'Barn',
+                        suffix: _barnHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green),
+                        hintText: 'Select barn new person is a part of'),
+                    validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()]),
+                    items: MyApp.barnList
+                        .map((barn) => DropdownMenuItem(
+                              child: Text(barn.name),
+                              value: barn,
+                              alignment: AlignmentDirectional.center,
+                              onTap: () {
+                                barnId = barn.id;
+                              },
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _barnHasError = !(_createPersonFormKey
+                                .currentState?.fields['placement_barn']
+                                ?.validate() ??
+                            false);
+                      });
+                    },
+                  )
                 ],
               )),
           Row(
@@ -177,6 +209,7 @@ class _CreatePersonForm extends State<CreatePersonForm> {
                     if (_createPersonFormKey.currentState?.saveAndValidate() ??
                         false) {
                       await updatePersonDatabase();
+                      await linkPersonToBarn();
                       debugPrint(
                           _createPersonFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
@@ -209,16 +242,22 @@ class _CreatePersonForm extends State<CreatePersonForm> {
   }
 
   Future<void> updatePersonDatabase() async {
-    FirebaseFirestore.instance
+    DocumentReference doc = await FirebaseFirestore.instance
         .collection('people')
-        .add(newPerson.toMap())
-        .then((value) {
-      print('Updated successfully');
-      newPerson.id = value.id;
-      MyApp.people.add(newPerson);
-    }).catchError((error) => print('Failed to update: $error'));
+        .add(newPerson.toMap());
+
+    newPerson.id = doc.id;
+    MyApp.people.add(newPerson);
   }
 
-  //TODO: Figure out how to link a person to a barn
-  Future<void> linkPersonToBarn() async {}
+  Future<void> linkPersonToBarn() async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnId);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc(newPerson.id);
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
+  }
 }
