@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/create_animal_form.dart';
 import 'package:easy_barn/create_barn_form.dart';
 import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/person_class.dart';
@@ -158,10 +159,11 @@ class _BarnList extends State<BarnList> {
                             height: 200,
                             child: Column(children: [
                               TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Navigator.of(ctx).push(MaterialPageRoute(
                                         builder: (ctx) =>
                                             const CreatePersonForm()));
+                                    setState(() {});
                                   },
                                   child: const Text('Add Person')),
                               TextButton(
@@ -172,7 +174,16 @@ class _BarnList extends State<BarnList> {
                                                 const CreateBarnForm()));
                                     setState(() {});
                                   },
-                                  child: const Text('Add Barn'))
+                                  child: const Text('Add Barn')),
+                              TextButton(
+                                  onPressed: () async {
+                                    await Navigator.of(ctx).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const CreateAnimalForm()));
+                                    setState(() {});
+                                  },
+                                  child: const Text('Add Animal'))
                             ])));
                   });
             },
