@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/create_barn_form.dart';
+import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -129,6 +131,58 @@ class _BarnList extends State<BarnList> {
                     fontWeight: FontWeight.w600)),
           ),
         ),
+        endDrawer: NavigationDrawer(children: [
+          SizedBox(
+              height: 80,
+              child: DrawerHeader(
+                  decoration:
+                      BoxDecoration(color: Color.fromARGB(255, 51, 91, 122)),
+                  child: Center(
+                      child: Text(
+                    'Menu',
+                    style: GoogleFonts.bitter(
+                        textStyle: const TextStyle(
+                            color: Color.fromARGB(255, 244, 221, 177),
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600)),
+                  )))),
+          ListTile(
+            title: const Text("Add New"),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: const Text('Add New'),
+                        content: SizedBox(
+                            height: 200,
+                            child: Column(children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).push(MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const CreatePersonForm()));
+                                  },
+                                  child: const Text('Add Person')),
+                              TextButton(
+                                  onPressed: () async {
+                                    await Navigator.of(ctx).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const CreateBarnForm()));
+                                    setState(() {});
+                                  },
+                                  child: const Text('Add Barn'))
+                            ])));
+                  });
+            },
+          ),
+          Divider(
+            height: 1,
+            color: Colors.blueGrey.shade800,
+            thickness: 1,
+          )
+        ]),
         body: Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(

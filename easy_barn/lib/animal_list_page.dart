@@ -1,4 +1,5 @@
 import 'package:easy_barn/barn_details_page.dart';
+import 'package:easy_barn/create_barn_form.dart';
 import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/person_list.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,42 @@ class _AnimalList extends State<AnimalList> {
                               fontWeight: FontWeight.w600)),
                     )))),
             ListTile(
+              title: const Text("Add New"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: const Text('Add New'),
+                          content: SizedBox(
+                              height: 200,
+                              child: Column(children: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).push(MaterialPageRoute(
+                                          builder: (ctx) =>
+                                              const CreatePersonForm()));
+                                    },
+                                    child: const Text('Add Person')),
+                                TextButton(
+                                    onPressed: () async {
+                                      await Navigator.of(ctx).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const CreateBarnForm()));
+                                      setState(() {});
+                                    },
+                                    child: const Text('Add Barn'))
+                              ])));
+                    });
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
               title: const Text("Barn Information"),
               onTap: () {
                 Navigator.of(ctx).push(MaterialPageRoute(
@@ -84,31 +121,6 @@ class _AnimalList extends State<AnimalList> {
               onTap: () {
                 Navigator.of(ctx).push(
                     MaterialPageRoute(builder: (ctx) => const PeopleList()));
-              },
-            ),
-            Divider(
-              height: 1,
-              color: Colors.blueGrey.shade800,
-              thickness: 1,
-            ),
-            ListTile(
-              title: const Text("Add New"),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                          title: const Text('Add New'),
-                          actions: <Widget>[
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).push(MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const CreatePersonForm()));
-                                },
-                                child: const Text('Add Person'))
-                          ]);
-                    });
               },
             ),
             Divider(

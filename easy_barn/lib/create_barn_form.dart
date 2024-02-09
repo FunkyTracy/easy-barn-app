@@ -7,16 +7,16 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EditBarnForm extends StatefulWidget {
-  const EditBarnForm({super.key});
+class CreateBarnForm extends StatefulWidget {
+  const CreateBarnForm({super.key});
 
   @override
-  State<EditBarnForm> createState() {
-    return _EditBarnForm();
+  State<CreateBarnForm> createState() {
+    return _CreateBarnForm();
   }
 }
 
-class _EditBarnForm extends State<EditBarnForm> {
+class _CreateBarnForm extends State<CreateBarnForm> {
   final _createBarnFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
@@ -24,10 +24,18 @@ class _EditBarnForm extends State<EditBarnForm> {
   bool _addressHasError = false;
   bool _ownerHasError = false;
 
+  List<Person> allPeople = [];
+
   Barn newBarn =
       Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 
-  List<DocumentReference> peopleDocs = [];
+  @override
+  void initState() {
+    super.initState();
+    getAllPeople().then((_) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext ctx) {
@@ -147,7 +155,16 @@ class _EditBarnForm extends State<EditBarnForm> {
                         hintText: 'Select owner of the barn'),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required()]),
-                    items: getAllPeople().map(),
+                    items: allPeople
+                        .map((person) => DropdownMenuItem(
+                              child: Text(person.name),
+                              value: person,
+                              alignment: AlignmentDirectional.center,
+                              onTap: () {
+                                newBarn.ownerid = person.id;
+                              },
+                            ))
+                        .toList(),
                     onChanged: (value) async {
                       setState(() {
                         _ownerHasError = !(_createBarnFormKey
@@ -168,6 +185,8 @@ class _EditBarnForm extends State<EditBarnForm> {
                         false) {
                       debugPrint(
                           _createBarnFormKey.currentState?.value.toString());
+                      await addBarnToDatabase();
+                      await linkPersonToBarn();
                       Navigator.of(ctx).maybePop();
                     } else {
                       debugPrint(
@@ -181,29 +200,42 @@ class _EditBarnForm extends State<EditBarnForm> {
                   ),
                 ),
               ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(ctx).maybePop();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Color.fromARGB(255, 37, 109, 168)),
+                  ),
+                ),
+              ),
             ],
           )
         ])));
   }
 
-  Future<void> updateBarnDatabase() async {
-    DocumentReference ownerRef = await FirebaseFirestore.instance
-        .collection('people')
-        .doc(newBarn.ownerid);
+  Future<void> addBarnToDatabase() async {
+    DocumentReference ownerRef =
+        FirebaseFirestore.instance.collection('people').doc(newBarn.ownerid);
 
-    FirebaseFirestore.instance.collection('barns').add({
+    DocumentReference barnRef =
+        await FirebaseFirestore.instance.collection('barns').add({
       'name': newBarn.name,
       'address': newBarn.address,
       'number': newBarn.phoneNumber,
       'owner': ownerRef
     });
+
+    newBarn.id = barnRef.id;
+    MyApp.barnList.add(newBarn);
   }
 
-  Future<List<Person>> getAllPeople() async {
+  Future<void> getAllPeople() async {
     QuerySnapshot qs =
         await FirebaseFirestore.instance.collection('people').get();
 
-    List<Person> peopleTemp = [];
     for (QueryDocumentSnapshot doc in qs.docs) {
       Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
       Person person = Person(
@@ -213,9 +245,19 @@ class _EditBarnForm extends State<EditBarnForm> {
           emergencyPerson: item['emergencyPerson'] ?? '',
           emergencyNumber: item['emergencyNumber'] ?? '');
 
-      peopleTemp.add(person);
+      allPeople.add(person);
     }
+  }
 
-    return peopleTemp;
+  //TODO: is there a more efficient way to link these two here rather than making more calls to the database?
+  Future<void> linkPersonToBarn() async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(newBarn.id);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc(newBarn.ownerid);
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
   }
 }
