@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/main.dart';
-import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -22,13 +21,26 @@ class _EditAnimalForm extends State<EditAnimalForm> {
   final _animalFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
-  bool _ownerNameHasError = false;
+  bool _ownerHasError = false;
   bool _descriptionHasError = false;
   bool _stallLocationHasError = false;
   bool _feedingHasError = false;
   bool _medicationHasError = false;
   bool _vetHasError = false;
   bool _farrierHasError = false;
+
+  Animal placeholderAnimal = Animal(
+      id: MyApp.selectedAnimal.id,
+      description: MyApp.selectedAnimal.description,
+      stall: MyApp.selectedAnimal.stall,
+      feedingInstructions: MyApp.selectedAnimal.feedingInstructions,
+      medications: MyApp.selectedAnimal.medications,
+      vet: MyApp.selectedAnimal.vet,
+      farrier: MyApp.selectedAnimal.farrier,
+      name: MyApp.selectedAnimal.name,
+      ownerid: MyApp.selectedAnimal.ownerid);
+
+  String newOwnerId = "";
 
   @override
   Widget build(BuildContext ctx) {
@@ -48,15 +60,10 @@ class _EditAnimalForm extends State<EditAnimalForm> {
             child: Column(children: <Widget>[
           FormBuilder(
               key: _animalFormKey,
-              onChanged: () {
-                _animalFormKey.currentState!.save();
-              },
               initialValue: {
                 'name': MyApp.selectedAnimal.name,
-                'owner': MyApp.people
-                    .firstWhere(
-                        (person) => person.id == MyApp.selectedAnimal.ownerid)
-                    .name,
+                'owner': MyApp.people.firstWhere(
+                    (person) => person.id == MyApp.selectedAnimal.ownerid),
                 'description': MyApp.selectedAnimal.description,
                 'stall_location': MyApp.selectedAnimal.stall,
                 'feeding': MyApp.selectedAnimal.feedingInstructions,
@@ -94,34 +101,34 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                   ),
-                  FormBuilderTextField(
-                    name: 'owner',
-                    maxLines: null,
-                    autovalidateMode: AutovalidateMode.always,
-                    decoration: InputDecoration(
-                        labelText: 'Owner Name',
-                        suffixIcon: _ownerNameHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) async {
-                      setState(() {
-                        _ownerNameHasError = !(_animalFormKey
-                                .currentState?.fields['owner']
-                                ?.validate() ??
-                            false);
-                      });
-                      if (!_ownerNameHasError) {
-                        await updatePersonLocal(value!);
-                      }
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.match('^[a-zA-Z \t\n-]+\$'),
-                      FormBuilderValidators.maxLength(40),
-                    ]),
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                  ),
+                  FormBuilderDropdown(
+                      name: 'owner',
+                      decoration: InputDecoration(
+                          labelText: 'Owner',
+                          suffix: _ownerHasError
+                              ? const Icon(Icons.error, color: Colors.red)
+                              : const Icon(Icons.check, color: Colors.green),
+                          hintText: 'Select owner of the animal'),
+                      validator: FormBuilderValidators.compose(
+                          [FormBuilderValidators.required()]),
+                      items: MyApp.people
+                          .map((person) => DropdownMenuItem(
+                                child: Text(person.name),
+                                value: person,
+                                alignment: AlignmentDirectional.center,
+                                onTap: () {
+                                  newOwnerId = person.id;
+                                },
+                              ))
+                          .toList(),
+                      onChanged: (value) async {
+                        setState(() {
+                          _ownerHasError = !(_animalFormKey
+                                  .currentState?.fields['owner']
+                                  ?.validate() ??
+                              false);
+                        });
+                      }),
                   FormBuilderTextField(
                     name: 'description',
                     maxLines: null,
@@ -306,7 +313,6 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                     if (_animalFormKey.currentState?.saveAndValidate() ??
                         false) {
                       await updateAnimals();
-                      await updatePersonDatabase();
                       debugPrint(_animalFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
@@ -320,41 +326,48 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   ),
                 ),
               ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    MyApp.selectedAnimal = placeholderAnimal;
+                    Navigator.of(ctx).maybePop();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Color.fromARGB(255, 37, 109, 168)),
+                  ),
+                ),
+              ),
             ],
           )
         ])));
   }
 
   Future<void> updateAnimals() async {
+    MyApp.selectedAnimal.ownerid = newOwnerId;
+
     Animal found = MyApp.animals
         .firstWhere((element) => element.id == MyApp.selectedAnimal.id);
     int index = MyApp.animals.indexOf(found);
     MyApp.animals[index] = MyApp.selectedAnimal;
 
+    DocumentReference ownerRef = FirebaseFirestore.instance
+        .collection('people')
+        .doc(MyApp.selectedAnimal.ownerid);
+
     FirebaseFirestore.instance
         .collection('animals')
         .doc(MyApp.selectedAnimal.id)
-        .update(MyApp.selectedAnimal.toMap())
-        .then((value) => print('Updated successfully'))
-        .catchError((error) => print('Failed to update: $error'));
-  }
-
-  Future<void> updatePersonLocal(String value) async {
-    Person temp = MyApp.people
-        .firstWhere((person) => person.id == MyApp.selectedAnimal.ownerid);
-    int index = MyApp.people.indexOf(temp);
-    temp.name = value;
-    MyApp.people[index] = temp;
-  }
-
-  Future<void> updatePersonDatabase() async {
-    Person temp = MyApp.people
-        .firstWhere((person) => person.id == MyApp.selectedAnimal.ownerid);
-
-    FirebaseFirestore.instance
-        .collection('people')
-        .doc(temp.id)
-        .update(temp.toMap())
+        .update({
+          'name': MyApp.selectedAnimal.name,
+          'description': MyApp.selectedAnimal.description,
+          'farrier': MyApp.selectedAnimal.farrier,
+          'feeding': MyApp.selectedAnimal.feedingInstructions,
+          'medications': MyApp.selectedAnimal.medications,
+          'stall': MyApp.selectedAnimal.stall,
+          'vet': MyApp.selectedAnimal.vet,
+          'owner': ownerRef
+        })
         .then((value) => print('Updated successfully'))
         .catchError((error) => print('Failed to update: $error'));
   }
