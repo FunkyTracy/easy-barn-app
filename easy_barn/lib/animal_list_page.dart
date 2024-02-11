@@ -118,9 +118,10 @@ class _AnimalList extends State<AnimalList> {
             ),
             ListTile(
               title: const Text("Barn Information"),
-              onTap: () {
-                Navigator.of(ctx).push(MaterialPageRoute(
+              onTap: () async {
+                await Navigator.of(ctx).push(MaterialPageRoute(
                     builder: (ctx) => const BarnDetailPage()));
+                setState(() {});
               },
             ),
             Divider(
@@ -130,9 +131,10 @@ class _AnimalList extends State<AnimalList> {
             ),
             ListTile(
               title: const Text("Barn Members"),
-              onTap: () {
-                Navigator.of(ctx).push(
+              onTap: () async {
+                await Navigator.of(ctx).push(
                     MaterialPageRoute(builder: (ctx) => const PeopleList()));
+                setState(() {});
               },
             ),
             Divider(
