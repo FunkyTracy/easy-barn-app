@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/create_animal_form.dart';
 import 'package:easy_barn/create_barn_form.dart';
 import 'package:easy_barn/create_person_form.dart';
@@ -114,6 +115,33 @@ class _BarnList extends State<BarnList> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => animalList.AnimalList(name: barn.name)));
             },
+            onLongPress: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Delete Barn'),
+                      content: const Text(
+                          'You are about to delete the selected Barn which will delete all animals'
+                          'within it and remove the barn from any boarders\' accounts.'
+                          'Is this really what you want?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () async {
+                              await deleteBarn(barn);
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                            child: const Text('Delete')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'))
+                      ],
+                    );
+                  });
+            },
           ),
         );
       });
@@ -202,5 +230,36 @@ class _BarnList extends State<BarnList> {
                     fit: BoxFit.cover,
                     opacity: 0.5)),
             child: buildBarns(main.MyApp.barnList)));
+  }
+
+  Future<void> deleteBarn(Barn barn) async {
+    DocumentReference barnDoc =
+        FirebaseFirestore.instance.collection('barns').doc(barn.id);
+
+    QuerySnapshot animalSnapshot = await FirebaseFirestore.instance
+        .collection('animals')
+        .where('barn',
+            isEqualTo: FirebaseFirestore.instance.doc('barns/${barn.id}'))
+        .get();
+
+    for (QueryDocumentSnapshot animalDoc in animalSnapshot.docs) {
+      await animalDoc.reference.delete();
+    }
+
+    QuerySnapshot linkSnapshot = await FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .where('barnid',
+            isEqualTo: FirebaseFirestore.instance.doc('barns/${barn.id}'))
+        .get();
+
+    for (QueryDocumentSnapshot linkDoc in linkSnapshot.docs) {
+      await linkDoc.reference.delete();
+    }
+
+    await barnDoc.delete();
+
+    int index =
+        main.MyApp.barnList.indexWhere((element) => element.id == barn.id);
+    main.MyApp.barnList.removeAt(index);
   }
 }
