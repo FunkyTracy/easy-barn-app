@@ -19,86 +19,6 @@ class BarnList extends StatefulWidget {
 }
 
 class _BarnList extends State<BarnList> {
-  Future<String> getAnimalOwner(DocumentReference ownerRef) async {
-    DocumentSnapshot ownerSnapshot = await ownerRef.get();
-    if (ownerSnapshot.exists) {
-      return ownerSnapshot.id;
-    } else {
-      return '';
-    }
-  }
-
-  Future<void> pickAnimalList() async {
-    QuerySnapshot qs = await FirebaseFirestore.instance
-        .collection('animals')
-        .where('barn',
-            isEqualTo: FirebaseFirestore.instance
-                .doc('barns/${main.MyApp.selectedBarn.id}'))
-        .get();
-
-    List<Animal> animalsTemp = [];
-    for (QueryDocumentSnapshot doc in qs.docs) {
-      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
-      Animal temp = Animal(
-          id: doc.id,
-          description: item['description'] ?? "",
-          stall: item['stall'] ?? "",
-          feedingInstructions: item['feeding'] ?? "",
-          medications: item['medications'] ?? "",
-          vet: item['vet'] ?? "",
-          farrier: item['farrier'] ?? "",
-          name: item['name'] ?? "",
-          ownerid: await getAnimalOwner(item['owner']));
-
-      animalsTemp.add(temp);
-    }
-
-    main.MyApp.animals = animalsTemp;
-  }
-
-  Future<Person> getPersonFromId(DocumentReference personRef) async {
-    DocumentSnapshot personSnapshot = await personRef.get();
-
-    if (personSnapshot.exists) {
-      Map<String, dynamic> person =
-          personSnapshot.data() as Map<String, dynamic>;
-
-      Person personToReturn = Person(
-          id: personSnapshot.id,
-          name: person['name'] ?? '',
-          phoneNumber: person['number'] ?? '',
-          emergencyPerson: person['emergencyPerson'] ?? '',
-          emergencyNumber: person['emergencyNumber'] ?? '');
-      return personToReturn;
-    } else {
-      return Person(
-          id: "",
-          name: "",
-          phoneNumber: "",
-          emergencyPerson: "",
-          emergencyNumber: "");
-    }
-  }
-
-  Future<void> pickPeopleList() async {
-    QuerySnapshot qs = await FirebaseFirestore.instance
-        .collection('barn_to_person')
-        .where('barnid',
-            isEqualTo: FirebaseFirestore.instance
-                .doc('barns/${main.MyApp.selectedBarn.id}'))
-        .get();
-
-    List<Person> peopleTemp = [];
-    for (QueryDocumentSnapshot doc in qs.docs) {
-      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
-      Person person = await getPersonFromId(item['personid']);
-
-      peopleTemp.add(person);
-    }
-
-    main.MyApp.people = peopleTemp;
-  }
-
   Widget buildBarns(List<barnClass.Barn> barns) => ListView.builder(
       itemCount: barns.length,
       itemBuilder: (context, index) {
@@ -123,7 +43,7 @@ class _BarnList extends State<BarnList> {
                       title: const Text('Delete Barn'),
                       content: const Text(
                           'You are about to delete the selected Barn which will delete all animals'
-                          'within it and remove the barn from any boarders\' accounts.'
+                          'within it and remove the barn from any boarders\' accounts.\n'
                           'Is this really what you want?'),
                       actions: [
                         TextButton(
@@ -230,6 +150,86 @@ class _BarnList extends State<BarnList> {
                     fit: BoxFit.cover,
                     opacity: 0.5)),
             child: buildBarns(main.MyApp.barnList)));
+  }
+
+  Future<String> getAnimalOwner(DocumentReference ownerRef) async {
+    DocumentSnapshot ownerSnapshot = await ownerRef.get();
+    if (ownerSnapshot.exists) {
+      return ownerSnapshot.id;
+    } else {
+      return '';
+    }
+  }
+
+  Future<void> pickAnimalList() async {
+    QuerySnapshot qs = await FirebaseFirestore.instance
+        .collection('animals')
+        .where('barn',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .get();
+
+    List<Animal> animalsTemp = [];
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Animal temp = Animal(
+          id: doc.id,
+          description: item['description'] ?? "",
+          stall: item['stall'] ?? "",
+          feedingInstructions: item['feeding'] ?? "",
+          medications: item['medications'] ?? "",
+          vet: item['vet'] ?? "",
+          farrier: item['farrier'] ?? "",
+          name: item['name'] ?? "",
+          ownerid: await getAnimalOwner(item['owner']));
+
+      animalsTemp.add(temp);
+    }
+
+    main.MyApp.animals = animalsTemp;
+  }
+
+  Future<Person> getPersonFromId(DocumentReference personRef) async {
+    DocumentSnapshot personSnapshot = await personRef.get();
+
+    if (personSnapshot.exists) {
+      Map<String, dynamic> person =
+          personSnapshot.data() as Map<String, dynamic>;
+
+      Person personToReturn = Person(
+          id: personSnapshot.id,
+          name: person['name'] ?? '',
+          phoneNumber: person['number'] ?? '',
+          emergencyPerson: person['emergencyPerson'] ?? '',
+          emergencyNumber: person['emergencyNumber'] ?? '');
+      return personToReturn;
+    } else {
+      return Person(
+          id: "",
+          name: "",
+          phoneNumber: "",
+          emergencyPerson: "",
+          emergencyNumber: "");
+    }
+  }
+
+  Future<void> pickPeopleList() async {
+    QuerySnapshot qs = await FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .where('barnid',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .get();
+
+    List<Person> peopleTemp = [];
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Person person = await getPersonFromId(item['personid']);
+
+      peopleTemp.add(person);
+    }
+
+    main.MyApp.people = peopleTemp;
   }
 
   Future<void> deleteBarn(Barn barn) async {

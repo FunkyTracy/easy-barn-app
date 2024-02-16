@@ -44,7 +44,7 @@ class _AnimalList extends State<AnimalList> {
                   return AlertDialog(
                     title: const Text('Delete Animal'),
                     content: const Text(
-                        'You are about to delete the selected animal. Is this really what you want?'),
+                        'You are about to delete the selected animal.\n Is this really what you want?'),
                     actions: [
                       TextButton(
                           onPressed: () async {

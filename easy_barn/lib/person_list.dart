@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_barn/person_class.dart';
 import 'package:easy_barn/person_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +28,34 @@ class _PeopleList extends State<PeopleList> {
                   builder: (ctx) => const PersonDetailPage()));
               setState(() {});
             },
+            onLongPress: () async {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Delete Person'),
+                      content: const Text(
+                          'You are about to delete the selected Perosn which will delete all animals '
+                          'they own within the barn and remove them from the boarders list.\n'
+                          'This will not delete their account.\n'
+                          'Is this really what you want?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () async {
+                              await deletePerson(person);
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                            child: const Text('Delete')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'))
+                      ],
+                    );
+                  });
+            },
           ),
         );
       });
@@ -52,5 +82,43 @@ class _PeopleList extends State<PeopleList> {
                     fit: BoxFit.cover,
                     opacity: 0.5)),
             child: buildPeopleList()));
+  }
+
+  Future<void> deletePerson(Person person) async {
+    QuerySnapshot animalSnapshot = await FirebaseFirestore.instance
+        .collection('animals')
+        .where('barn',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .where('owner',
+            isEqualTo: FirebaseFirestore.instance.doc('people/${person.id}'))
+        .get();
+
+    for (QueryDocumentSnapshot animalDoc in animalSnapshot.docs) {
+      await animalDoc.reference.delete();
+    }
+
+    QuerySnapshot linkSnapshot = await FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .where('barnid',
+            isEqualTo: FirebaseFirestore.instance
+                .doc('barns/${main.MyApp.selectedBarn.id}'))
+        .where('personid',
+            isEqualTo: FirebaseFirestore.instance.doc('people/${person.id}'))
+        .get();
+
+    for (QueryDocumentSnapshot linkDoc in linkSnapshot.docs) {
+      await linkDoc.reference.delete();
+
+      int index = main.MyApp.animals
+          .indexWhere((element) => element.ownerid == person.id);
+      if (index > -1) {
+        main.MyApp.animals.removeAt(index);
+      }
+    }
+
+    int index =
+        main.MyApp.people.indexWhere((element) => element.id == person.id);
+    main.MyApp.people.removeAt(index);
   }
 }
