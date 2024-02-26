@@ -1,5 +1,6 @@
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,8 @@ class _MyApp extends State<MyApp> {
               seedColor: const Color.fromARGB(255, 226, 157, 30)),
           useMaterial3: true,
         ),
-        home: FutureBuilder<List<Barn>>(
+        home: const LoginPage());
+    /*FutureBuilder<List<Barn>>(
             future: getBarnsFromDatabase(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,6 +108,6 @@ class _MyApp extends State<MyApp> {
               } else {
                 return Text('Error: ${snapshot.error}');
               }
-            }));
+            }));*/
   }
 }
