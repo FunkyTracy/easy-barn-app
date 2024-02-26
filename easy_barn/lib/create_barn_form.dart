@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/main.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
@@ -6,22 +7,35 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EditPersonForm extends StatefulWidget {
-  const EditPersonForm({super.key});
+class CreateBarnForm extends StatefulWidget {
+  const CreateBarnForm({super.key});
 
   @override
-  State<EditPersonForm> createState() {
-    return _EditPersonForm();
+  State<CreateBarnForm> createState() {
+    return _CreateBarnForm();
   }
 }
 
-class _EditPersonForm extends State<EditPersonForm> {
-  final _personFormKey = GlobalKey<FormBuilderState>();
+class _CreateBarnForm extends State<CreateBarnForm> {
+  final _createBarnFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
   bool _phoneHasError = false;
-  bool _emergencyPersonHasError = false;
-  bool _emergencyPhoneHasError = false;
+  bool _addressHasError = false;
+  bool _ownerHasError = false;
+
+  List<Person> allPeople = [];
+
+  Barn newBarn =
+      Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPeople().then((_) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext ctx) {
@@ -40,15 +54,9 @@ class _EditPersonForm extends State<EditPersonForm> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           FormBuilder(
-              key: _personFormKey,
+              key: _createBarnFormKey,
               onChanged: () {
-                _personFormKey.currentState!.save();
-              },
-              initialValue: {
-                'name': MyApp.selectedPerson.name,
-                'phone': MyApp.selectedPerson.phoneNumber,
-                'emergency_person': MyApp.selectedPerson.emergencyPerson,
-                'emergency_number': MyApp.selectedPerson.emergencyNumber,
+                _createBarnFormKey.currentState!.save();
               },
               child: Column(
                 children: <Widget>[
@@ -63,13 +71,13 @@ class _EditPersonForm extends State<EditPersonForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _nameHasError = !(_personFormKey
+                        _nameHasError = !(_createBarnFormKey
                                 .currentState?.fields['name']
                                 ?.validate() ??
                             false);
                       });
                       if (!_nameHasError) {
-                        MyApp.selectedPerson.name = value!;
+                        newBarn.name = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -91,13 +99,13 @@ class _EditPersonForm extends State<EditPersonForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _phoneHasError = !(_personFormKey
+                        _phoneHasError = !(_createBarnFormKey
                                 .currentState?.fields['phone']
                                 ?.validate() ??
                             false);
                       });
                       if (!_phoneHasError) {
-                        MyApp.selectedPerson.phoneNumber = value!;
+                        newBarn.phoneNumber = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -110,61 +118,61 @@ class _EditPersonForm extends State<EditPersonForm> {
                     textInputAction: TextInputAction.next,
                   ),
                   FormBuilderTextField(
-                    name: 'emergency_person',
+                    name: 'address',
                     maxLines: null,
                     autovalidateMode: AutovalidateMode.always,
                     decoration: InputDecoration(
-                        labelText: 'Emergency Contact',
-                        suffixIcon: _emergencyPersonHasError
+                        labelText: 'Address',
+                        suffixIcon: _addressHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _emergencyPersonHasError = !(_personFormKey
-                                .currentState?.fields['emergency_person']
+                        _addressHasError = !(_createBarnFormKey
+                                .currentState?.fields['address']
                                 ?.validate() ??
                             false);
                       });
-                      if (!_emergencyPersonHasError) {
-                        MyApp.selectedPerson.emergencyPerson = value!;
+                      if (!_addressHasError) {
+                        newBarn.address = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.match('^[a-zA-Z \n\t\-]+\$'),
-                      FormBuilderValidators.maxLength(30),
+                      FormBuilderValidators.match('^[a-zA-Z0-9\., \n\t\-]+\$'),
+                      FormBuilderValidators.maxLength(60),
                     ]),
-                    keyboardType: TextInputType.name,
+                    keyboardType: TextInputType.streetAddress,
                     textInputAction: TextInputAction.next,
                   ),
-                  FormBuilderTextField(
-                    name: 'emergency_number',
-                    maxLines: null,
-                    autovalidateMode: AutovalidateMode.always,
+                  FormBuilderDropdown(
+                    name: 'owner',
                     decoration: InputDecoration(
-                        labelText: 'Emergency Contact Phone Number',
-                        suffixIcon: _emergencyPhoneHasError
+                        labelText: 'Owner',
+                        suffix: _ownerHasError
                             ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
+                            : const Icon(Icons.check, color: Colors.green),
+                        hintText: 'Select owner of the barn'),
+                    validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()]),
+                    items: allPeople
+                        .map((person) => DropdownMenuItem(
+                              child: Text(person.name),
+                              value: person,
+                              alignment: AlignmentDirectional.center,
+                              onTap: () {
+                                newBarn.ownerid = person.id;
+                              },
+                            ))
+                        .toList(),
+                    onChanged: (value) async {
                       setState(() {
-                        _emergencyPhoneHasError = !(_personFormKey
-                                .currentState?.fields['emergency_number']
+                        _ownerHasError = !(_createBarnFormKey
+                                .currentState?.fields['owner']
                                 ?.validate() ??
                             false);
                       });
-                      if (!_emergencyPhoneHasError) {
-                        MyApp.selectedPerson.emergencyNumber = value!;
-                      }
                     },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.match(
-                          '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
-                      FormBuilderValidators.maxLength(16),
-                    ]),
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.next,
                   ),
                 ],
               )),
@@ -173,14 +181,16 @@ class _EditPersonForm extends State<EditPersonForm> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (_personFormKey.currentState?.saveAndValidate() ??
+                    if (_createBarnFormKey.currentState?.saveAndValidate() ??
                         false) {
-                      await updatePeopleList();
-                      await updatePersonDatabase();
-                      debugPrint(_personFormKey.currentState?.value.toString());
+                      debugPrint(
+                          _createBarnFormKey.currentState?.value.toString());
+                      await addBarnToDatabase();
+                      await linkPersonToBarn();
                       Navigator.of(ctx).maybePop();
                     } else {
-                      debugPrint(_personFormKey.currentState?.value.toString());
+                      debugPrint(
+                          _createBarnFormKey.currentState?.value.toString());
                       debugPrint('validation failed');
                     }
                   },
@@ -190,26 +200,64 @@ class _EditPersonForm extends State<EditPersonForm> {
                   ),
                 ),
               ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(ctx).maybePop();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Color.fromARGB(255, 37, 109, 168)),
+                  ),
+                ),
+              ),
             ],
           )
         ])));
   }
 
-  Future<void> updatePeopleList() async {
-    Person found = MyApp.people
-        .firstWhere((element) => element.id == MyApp.selectedPerson.id);
+  Future<void> addBarnToDatabase() async {
+    DocumentReference ownerRef =
+        FirebaseFirestore.instance.collection('people').doc(newBarn.ownerid);
 
-    int index = MyApp.people.indexOf(found);
+    DocumentReference barnRef =
+        await FirebaseFirestore.instance.collection('barns').add({
+      'name': newBarn.name,
+      'address': newBarn.address,
+      'number': newBarn.phoneNumber,
+      'owner': ownerRef
+    });
 
-    MyApp.people[index] = MyApp.selectedPerson;
+    newBarn.id = barnRef.id;
+    MyApp.barnList.add(newBarn);
   }
 
-  Future<void> updatePersonDatabase() async {
+  Future<void> getAllPeople() async {
+    QuerySnapshot qs =
+        await FirebaseFirestore.instance.collection('people').get();
+
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Person person = Person(
+          id: doc.id,
+          name: item['name'] ?? '',
+          phoneNumber: item['number'] ?? '',
+          emergencyPerson: item['emergencyPerson'] ?? '',
+          emergencyNumber: item['emergencyNumber'] ?? '');
+
+      allPeople.add(person);
+    }
+  }
+
+  //TODO: is there a more efficient way to link these two here rather than making more calls to the database?
+  Future<void> linkPersonToBarn() async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(newBarn.id);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc(newBarn.ownerid);
+
     FirebaseFirestore.instance
-        .collection('people')
-        .doc(MyApp.selectedPerson.id)
-        .update(MyApp.selectedPerson.toMap())
-        .then((value) => print('Updated successfully'))
-        .catchError((error) => print('Failed to update: $error'));
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
   }
 }

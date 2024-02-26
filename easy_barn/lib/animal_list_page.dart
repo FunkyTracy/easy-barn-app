@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/barn_details_page.dart';
+import 'package:easy_barn/create_animal_form.dart';
+import 'package:easy_barn/create_barn_form.dart';
+import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/person_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,12 +27,40 @@ class _AnimalList extends State<AnimalList> {
 
         return Card(
             child: ListTile(
-          title: Text(animal.Name),
-          subtitle: Text(animal.Owner),
-          onTap: () {
+          title: Text(animal.name),
+          subtitle: Text(main.MyApp.people
+              .firstWhere((person) => person.id == animal.ownerid)
+              .name),
+          onTap: () async {
             main.MyApp.selectedAnimal = animal;
-            Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const AnimalDetailPage()));
+            setState(() {});
+          },
+          onLongPress: () async {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Delete Animal'),
+                    content: const Text(
+                        'You are about to delete the selected animal.\n Is this really what you want?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () async {
+                            await deleteAnimal(animal);
+                            Navigator.pop(context);
+                            setState(() {});
+                          },
+                          child: const Text('Delete')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'))
+                    ],
+                  );
+                });
           },
         ));
       });
@@ -64,10 +96,58 @@ class _AnimalList extends State<AnimalList> {
                               fontWeight: FontWeight.w600)),
                     )))),
             ListTile(
-              title: const Text("Barn Information"),
+              title: const Text("Add New"),
               onTap: () {
-                Navigator.of(ctx).push(MaterialPageRoute(
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: const Text('Add New'),
+                          content: SizedBox(
+                              height: 200,
+                              child: Column(children: [
+                                TextButton(
+                                    onPressed: () async {
+                                      await Navigator.of(ctx).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const CreatePersonForm()));
+                                      setState(() {});
+                                    },
+                                    child: const Text('Add Person')),
+                                TextButton(
+                                    onPressed: () async {
+                                      await Navigator.of(ctx).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const CreateBarnForm()));
+                                      setState(() {});
+                                    },
+                                    child: const Text('Add Barn')),
+                                TextButton(
+                                    onPressed: () async {
+                                      await Navigator.of(ctx).push(
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const CreateAnimalForm()));
+                                      setState(() {});
+                                    },
+                                    child: const Text('Add Animal'))
+                              ])));
+                    });
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
+              title: const Text("Barn Information"),
+              onTap: () async {
+                await Navigator.of(ctx).push(MaterialPageRoute(
                     builder: (ctx) => const BarnDetailPage()));
+                setState(() {});
               },
             ),
             Divider(
@@ -77,9 +157,10 @@ class _AnimalList extends State<AnimalList> {
             ),
             ListTile(
               title: const Text("Barn Members"),
-              onTap: () {
-                Navigator.of(ctx).push(
+              onTap: () async {
+                await Navigator.of(ctx).push(
                     MaterialPageRoute(builder: (ctx) => const PeopleList()));
+                setState(() {});
               },
             ),
             Divider(
@@ -97,5 +178,16 @@ class _AnimalList extends State<AnimalList> {
                     fit: BoxFit.cover,
                     opacity: 0.5)),
             child: buildAnimals()));
+  }
+
+  Future<void> deleteAnimal(Animal animal) async {
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection('animals').doc(animal.id);
+
+    await docRef.delete();
+
+    int index =
+        main.MyApp.animals.indexWhere((element) => element.id == animal.id);
+    main.MyApp.animals.removeAt(index);
   }
 }

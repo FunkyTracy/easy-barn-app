@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/main.dart';
+import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -8,17 +9,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 // '[^\s!@#\$%^&*(){}[]:;\'"<>?/\\_]+'
 
-class EditAnimalForm extends StatefulWidget {
-  const EditAnimalForm({super.key});
+class CreateAnimalForm extends StatefulWidget {
+  const CreateAnimalForm({super.key});
 
   @override
-  State<EditAnimalForm> createState() {
-    return _EditAnimalForm();
+  State<CreateAnimalForm> createState() {
+    return _CreateAnimalForm();
   }
 }
 
-class _EditAnimalForm extends State<EditAnimalForm> {
-  final _animalFormKey = GlobalKey<FormBuilderState>();
+class _CreateAnimalForm extends State<CreateAnimalForm> {
+  final _createAnimalFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
   bool _ownerHasError = false;
@@ -28,19 +29,29 @@ class _EditAnimalForm extends State<EditAnimalForm> {
   bool _medicationHasError = false;
   bool _vetHasError = false;
   bool _farrierHasError = false;
+  bool _barnHasError = false;
 
-  Animal placeholderAnimal = Animal(
-      id: MyApp.selectedAnimal.id,
-      description: MyApp.selectedAnimal.description,
-      stall: MyApp.selectedAnimal.stall,
-      feedingInstructions: MyApp.selectedAnimal.feedingInstructions,
-      medications: MyApp.selectedAnimal.medications,
-      vet: MyApp.selectedAnimal.vet,
-      farrier: MyApp.selectedAnimal.farrier,
-      name: MyApp.selectedAnimal.name,
-      ownerid: MyApp.selectedAnimal.ownerid);
+  List<Person> allPeople = [];
+  String barnId = "";
 
-  String newOwnerId = "";
+  static Animal newAnimal = Animal(
+      id: "",
+      description: "",
+      stall: "",
+      feedingInstructions: "",
+      medications: "",
+      vet: "",
+      farrier: "",
+      name: "",
+      ownerid: "");
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPeople().then((_) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext ctx) {
@@ -59,17 +70,9 @@ class _EditAnimalForm extends State<EditAnimalForm> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           FormBuilder(
-              key: _animalFormKey,
-              initialValue: {
-                'name': MyApp.selectedAnimal.name,
-                'owner': MyApp.people.firstWhere(
-                    (person) => person.id == MyApp.selectedAnimal.ownerid),
-                'description': MyApp.selectedAnimal.description,
-                'stall_location': MyApp.selectedAnimal.stall,
-                'feeding': MyApp.selectedAnimal.feedingInstructions,
-                'meds': MyApp.selectedAnimal.medications,
-                'vet': MyApp.selectedAnimal.vet,
-                'farrier': MyApp.selectedAnimal.farrier
+              key: _createAnimalFormKey,
+              onChanged: () {
+                _createAnimalFormKey.currentState!.save();
               },
               child: Column(
                 children: <Widget>[
@@ -84,13 +87,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _nameHasError = !(_animalFormKey
+                        _nameHasError = !(_createAnimalFormKey
                                 .currentState?.fields['name']
                                 ?.validate() ??
                             false);
                       });
                       if (!_nameHasError) {
-                        MyApp.selectedAnimal.name = value!;
+                        newAnimal.name = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -102,33 +105,34 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                     textInputAction: TextInputAction.next,
                   ),
                   FormBuilderDropdown(
-                      name: 'owner',
-                      decoration: InputDecoration(
-                          labelText: 'Owner',
-                          suffix: _ownerHasError
-                              ? const Icon(Icons.error, color: Colors.red)
-                              : const Icon(Icons.check, color: Colors.green),
-                          hintText: 'Select owner of the animal'),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: MyApp.people
-                          .map((person) => DropdownMenuItem(
-                                child: Text(person.name),
-                                value: person,
-                                alignment: AlignmentDirectional.center,
-                                onTap: () {
-                                  newOwnerId = person.id;
-                                },
-                              ))
-                          .toList(),
-                      onChanged: (value) async {
-                        setState(() {
-                          _ownerHasError = !(_animalFormKey
-                                  .currentState?.fields['owner']
-                                  ?.validate() ??
-                              false);
-                        });
-                      }),
+                    name: 'owner',
+                    decoration: InputDecoration(
+                        labelText: 'Owner',
+                        suffix: _ownerHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green),
+                        hintText: 'Select owner of the animal'),
+                    validator: FormBuilderValidators.compose(
+                        [FormBuilderValidators.required()]),
+                    items: allPeople
+                        .map((person) => DropdownMenuItem(
+                              child: Text(person.name),
+                              value: person,
+                              alignment: AlignmentDirectional.center,
+                              onTap: () {
+                                newAnimal.ownerid = person.id;
+                              },
+                            ))
+                        .toList(),
+                    onChanged: (value) async {
+                      setState(() {
+                        _ownerHasError = !(_createAnimalFormKey
+                                .currentState?.fields['owner']
+                                ?.validate() ??
+                            false);
+                      });
+                    },
+                  ),
                   FormBuilderTextField(
                     name: 'description',
                     maxLines: null,
@@ -140,13 +144,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _descriptionHasError = !(_animalFormKey
+                        _descriptionHasError = !(_createAnimalFormKey
                                 .currentState?.fields['description']
                                 ?.validate() ??
                             false);
                       });
                       if (!_descriptionHasError) {
-                        MyApp.selectedAnimal.description = value!;
+                        newAnimal.description = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -169,13 +173,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _stallLocationHasError = !(_animalFormKey
+                        _stallLocationHasError = !(_createAnimalFormKey
                                 .currentState?.fields['stall_location']
                                 ?.validate() ??
                             false);
                       });
                       if (!_stallLocationHasError) {
-                        MyApp.selectedAnimal.stall = value!;
+                        newAnimal.stall = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -198,13 +202,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _feedingHasError = !(_animalFormKey
+                        _feedingHasError = !(_createAnimalFormKey
                                 .currentState?.fields['feeding']
                                 ?.validate() ??
                             false);
                       });
                       if (!_feedingHasError) {
-                        MyApp.selectedAnimal.feedingInstructions = value!;
+                        newAnimal.feedingInstructions = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -227,13 +231,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _medicationHasError = !(_animalFormKey
+                        _medicationHasError = !(_createAnimalFormKey
                                 .currentState?.fields['meds']
                                 ?.validate() ??
                             false);
                       });
                       if (!_medicationHasError) {
-                        MyApp.selectedAnimal.medications = value!;
+                        newAnimal.medications = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -256,13 +260,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _vetHasError = !(_animalFormKey
+                        _vetHasError = !(_createAnimalFormKey
                                 .currentState?.fields['vet']
                                 ?.validate() ??
                             false);
                       });
                       if (!_vetHasError) {
-                        MyApp.selectedAnimal.vet = value!;
+                        newAnimal.vet = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -285,13 +289,13 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                             : const Icon(Icons.check, color: Colors.green)),
                     onChanged: (value) {
                       setState(() {
-                        _farrierHasError = !(_animalFormKey
+                        _farrierHasError = !(_createAnimalFormKey
                                 .currentState?.fields['farrier']
                                 ?.validate() ??
                             false);
                       });
                       if (!_farrierHasError) {
-                        MyApp.selectedAnimal.farrier = value!;
+                        newAnimal.farrier = value!;
                       }
                     },
                     validator: FormBuilderValidators.compose([
@@ -305,18 +309,49 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   ),
                 ],
               )),
+          FormBuilderDropdown(
+            name: 'placement_barn',
+            decoration: InputDecoration(
+                labelText: 'Barn',
+                suffix: _barnHasError
+                    ? const Icon(Icons.error, color: Colors.red)
+                    : const Icon(Icons.check, color: Colors.green),
+                hintText: 'Select barn to add animal to'),
+            validator: FormBuilderValidators.compose(
+                [FormBuilderValidators.required()]),
+            items: MyApp.barnList
+                .map((barn) => DropdownMenuItem(
+                      child: Text(barn.name),
+                      value: barn,
+                      alignment: AlignmentDirectional.center,
+                      onTap: () {
+                        barnId = barn.id;
+                      },
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _barnHasError = !(_createAnimalFormKey
+                        .currentState?.fields['placement_barn']
+                        ?.validate() ??
+                    false);
+              });
+            },
+          ),
           Row(
             children: <Widget>[
               Expanded(
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (_animalFormKey.currentState?.saveAndValidate() ??
+                    if (_createAnimalFormKey.currentState?.saveAndValidate() ??
                         false) {
-                      await updateAnimals();
-                      debugPrint(_animalFormKey.currentState?.value.toString());
+                      await addAnimalToDatabase();
+                      debugPrint(
+                          _createAnimalFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
                     } else {
-                      debugPrint(_animalFormKey.currentState?.value.toString());
+                      debugPrint(
+                          _createAnimalFormKey.currentState?.value.toString());
                       debugPrint('validation failed');
                     }
                   },
@@ -326,49 +361,48 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   ),
                 ),
               ),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    MyApp.selectedAnimal = placeholderAnimal;
-                    Navigator.of(ctx).maybePop();
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Color.fromARGB(255, 37, 109, 168)),
-                  ),
-                ),
-              ),
             ],
           )
         ])));
   }
 
-  Future<void> updateAnimals() async {
-    MyApp.selectedAnimal.ownerid = newOwnerId;
+  Future<void> addAnimalToDatabase() async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnId);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc(newAnimal.ownerid);
 
-    Animal found = MyApp.animals
-        .firstWhere((element) => element.id == MyApp.selectedAnimal.id);
-    int index = MyApp.animals.indexOf(found);
-    MyApp.animals[index] = MyApp.selectedAnimal;
+    DocumentReference animalRef =
+        await FirebaseFirestore.instance.collection('animals').add({
+      'name': newAnimal.name,
+      'description': newAnimal.description,
+      'farrier': newAnimal.farrier,
+      'feeding': newAnimal.feedingInstructions,
+      'medications': newAnimal.medications,
+      'stall': newAnimal.stall,
+      'vet': newAnimal.vet,
+      'barn': barnRef,
+      'owner': personRef
+    });
 
-    DocumentReference ownerRef = FirebaseFirestore.instance
-        .collection('people')
-        .doc(MyApp.selectedAnimal.ownerid);
+    newAnimal.id = animalRef.id;
+    MyApp.animals.add(newAnimal);
+  }
 
-    FirebaseFirestore.instance
-        .collection('animals')
-        .doc(MyApp.selectedAnimal.id)
-        .update({
-          'name': MyApp.selectedAnimal.name,
-          'description': MyApp.selectedAnimal.description,
-          'farrier': MyApp.selectedAnimal.farrier,
-          'feeding': MyApp.selectedAnimal.feedingInstructions,
-          'medications': MyApp.selectedAnimal.medications,
-          'stall': MyApp.selectedAnimal.stall,
-          'vet': MyApp.selectedAnimal.vet,
-          'owner': ownerRef
-        })
-        .then((value) => print('Updated successfully'))
-        .catchError((error) => print('Failed to update: $error'));
+  Future<void> getAllPeople() async {
+    QuerySnapshot qs =
+        await FirebaseFirestore.instance.collection('people').get();
+
+    for (QueryDocumentSnapshot doc in qs.docs) {
+      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
+      Person person = Person(
+          id: doc.id,
+          name: item['name'] ?? '',
+          phoneNumber: item['number'] ?? '',
+          emergencyPerson: item['emergencyPerson'] ?? '',
+          emergencyNumber: item['emergencyNumber'] ?? '');
+
+      allPeople.add(person);
+    }
   }
 }

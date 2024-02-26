@@ -50,56 +50,59 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Name),
+                title: Text(MyApp.selectedAnimal.name),
                 subtitle: const Text("Animal Name"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Owner),
+                title: Text(MyApp.people
+                    .firstWhere(
+                        (person) => person.id == MyApp.selectedAnimal.ownerid)
+                    .name),
                 subtitle: const Text("Owner Name"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Description),
+                title: Text(MyApp.selectedAnimal.description),
                 subtitle: const Text("Description"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Stall),
+                title: Text(MyApp.selectedAnimal.stall),
                 subtitle: const Text("Stall Location"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.FeedingInstructions),
+                title: Text(MyApp.selectedAnimal.feedingInstructions),
                 subtitle: const Text("Feeding Instructions"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Medications),
+                title: Text(MyApp.selectedAnimal.medications),
                 subtitle: const Text("Medications"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Vet),
+                title: Text(MyApp.selectedAnimal.vet),
                 subtitle: const Text("Veterinarian"),
               )),
               Card(
                   child: ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: Text(MyApp.selectedAnimal.Farrier),
+                title: Text(MyApp.selectedAnimal.farrier),
                 subtitle: const Text("Farrier"),
               )),
             ])));

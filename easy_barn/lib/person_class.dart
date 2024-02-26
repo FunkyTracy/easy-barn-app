@@ -11,4 +11,13 @@ class Person {
       required this.phoneNumber,
       required this.emergencyPerson,
       required this.emergencyNumber});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'number': phoneNumber,
+      'emergencyPerson': emergencyPerson,
+      'emergencyNumber': emergencyNumber
+    };
+  }
 }

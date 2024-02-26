@@ -17,18 +17,19 @@ class MyApp extends StatefulWidget {
   //hardcoded barns in barn_class
   static List<Barn> barnList = List<Barn>.empty();
   static Barn selectedBarn =
-      Barn(id: "", address: "", name: "", owner: "", phoneNumber: "");
+      Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 
   static List<Animal> animals = List<Animal>.empty();
   static Animal selectedAnimal = Animal(
-      Description: "",
-      Stall: "",
-      FeedingInstructions: "",
-      Medications: "",
-      Vet: "",
-      Farrier: "",
-      Name: "",
-      Owner: "");
+      id: "",
+      description: "",
+      stall: "",
+      feedingInstructions: "",
+      medications: "",
+      vet: "",
+      farrier: "",
+      name: "",
+      ownerid: "");
 
   static List<Person> people = List<Person>.empty();
   static Person selectedPerson = Person(
@@ -52,8 +53,7 @@ class _MyApp extends State<MyApp> {
   Future<String> getBarnOwner(DocumentReference ownerRef) async {
     DocumentSnapshot ownerSnapshot = await ownerRef.get();
     if (ownerSnapshot.exists) {
-      Map<String, dynamic> owner = ownerSnapshot.data() as Map<String, dynamic>;
-      return owner['name'];
+      return ownerSnapshot.id;
     } else {
       return '';
     }
@@ -68,7 +68,7 @@ class _MyApp extends State<MyApp> {
 
     for (QueryDocumentSnapshot barnDoc in qs.docs) {
       Barn barn =
-          Barn(id: "", address: "", name: "", owner: "", phoneNumber: "");
+          Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 
       barn.id = barnDoc.id;
 
@@ -76,7 +76,7 @@ class _MyApp extends State<MyApp> {
       barn.name = item['name'] ?? '';
       barn.address = item['address'] ?? '';
       barn.phoneNumber = item['number'] ?? '';
-      barn.owner = await getBarnOwner(item['owner']);
+      barn.ownerid = await getBarnOwner(item['owner']);
 
       barns.add(barn);
     }
