@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,10 +20,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPage extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormBuilderState>();
 
+  bool _emailHasError = false;
+  bool _passwordHasError = false;
+
+  String email = "";
+  String password = "";
+
   @override
   Widget build(BuildContext context) {
-    initializeFirebase();
-
     return Scaffold(
       body: FormBuilder(
         key: _loginFormKey,
@@ -32,49 +37,91 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
+                const Text(
                   'Welcome Back!',
                   style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 30.0),
+                const SizedBox(height: 30.0),
                 FormBuilderTextField(
                   name: 'email',
                   decoration: InputDecoration(
-                    hintText: 'Enter your email',
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
+                      hintText: 'Enter your email',
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                      suffixIcon: _emailHasError
+                          ? const Icon(Icons.error, color: Colors.red)
+                          : const Icon(Icons.check, color: Colors.green)),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
                     FormBuilderValidators.email(),
                   ]),
+                  onChanged: (value) {
+                    setState(() {
+                      _emailHasError = !(_loginFormKey
+                              .currentState?.fields['email']
+                              ?.validate() ??
+                          false);
+                    });
+                    if (!_emailHasError) {
+                      email = value!;
+                    }
+                  },
                 ),
                 SizedBox(height: 20.0),
                 FormBuilderTextField(
                   name: 'password',
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Enter your password',
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
+                      hintText: 'Enter your password',
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                      suffixIcon: _passwordHasError
+                          ? const Icon(Icons.error, color: Colors.red)
+                          : const Icon(Icons.check, color: Colors.green)),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
+                    FormBuilderValidators.match('^[a-zA-Z0-9 \.\$#!\-]+\$'),
                     FormBuilderValidators.minLength(6),
                   ]),
+                  onChanged: (value) {
+                    setState(() {
+                      _passwordHasError = !(_loginFormKey
+                              .currentState?.fields['password']
+                              ?.validate() ??
+                          false);
+                    });
+                    if (!_passwordHasError) {
+                      password = value!;
+                    }
+                  },
                 ),
                 SizedBox(height: 30.0),
                 ElevatedButton(
                   onPressed: () async {
                     if (_loginFormKey.currentState!.saveAndValidate()) {
                       // Implement login functionality here
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => buildBarnPage()));
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: email, // test.user@gmail.com
+                                password: password); //123password!!
+
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => buildBarnPage()));
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          _emailHasError = true;
+                          _passwordHasError = true;
+                        } else if (e.code == 'wrong-password') {
+                          _emailHasError = true;
+                          _passwordHasError = true;
+                        }
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -96,7 +143,7 @@ class _LoginPage extends State<LoginPage> {
                           builder: (context) => RegistrationPage()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Don\'t have an account? Register here',
                     style: TextStyle(
                       color: Colors.blue,
@@ -109,12 +156,6 @@ class _LoginPage extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> initializeFirebase() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
     );
   }
 
