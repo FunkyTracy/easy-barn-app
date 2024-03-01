@@ -23,7 +23,8 @@ class _CreatePersonForm extends State<CreatePersonForm> {
       name: "",
       phoneNumber: "",
       emergencyPerson: "",
-      emergencyNumber: "");
+      emergencyNumber: "",
+      uid: "");
 
   String barnId = '';
 

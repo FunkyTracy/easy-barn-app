@@ -400,7 +400,8 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
           name: item['name'] ?? '',
           phoneNumber: item['number'] ?? '',
           emergencyPerson: item['emergencyPerson'] ?? '',
-          emergencyNumber: item['emergencyNumber'] ?? '');
+          emergencyNumber: item['emergencyNumber'] ?? '',
+          uid: item['uid'] ?? '');
 
       allPeople.add(person);
     }

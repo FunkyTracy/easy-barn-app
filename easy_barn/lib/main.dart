@@ -43,7 +43,8 @@ class MyApp extends StatefulWidget {
       name: "",
       phoneNumber: "",
       emergencyPerson: "",
-      emergencyNumber: "");
+      emergencyNumber: "",
+      uid: "");
 
   @override
   State<MyApp> createState() => _MyApp();

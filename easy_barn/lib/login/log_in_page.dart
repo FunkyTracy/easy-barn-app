@@ -25,6 +25,7 @@ class _LoginPage extends State<LoginPage> {
 
   String email = "";
   String password = "";
+  String userUid = "";
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +110,12 @@ class _LoginPage extends State<LoginPage> {
                                 email: email, // test.user@gmail.com
                                 password: password); //123password!!
 
+                        userUid = credential.user!.uid;
+
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => buildBarnPage()));
+                                builder: (context) => buildBarnPage(userUid)));
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           _emailHasError = true;
@@ -159,9 +162,9 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  Widget buildBarnPage() {
+  Widget buildBarnPage(String uid) {
     return FutureBuilder<List<Barn>>(
-        future: getBarnsFromDatabase(),
+        future: getBarnsFromDatabase(uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
@@ -174,13 +177,27 @@ class _LoginPage extends State<LoginPage> {
         });
   }
 
-  Future<List<Barn>> getBarnsFromDatabase() async {
+  Future<List<Barn>> getBarnsFromDatabase(String uid) async {
     List<Barn> barns = [];
 
-    QuerySnapshot qs =
-        await FirebaseFirestore.instance.collection('barns').get();
+    QuerySnapshot peopleQs = await FirebaseFirestore.instance
+        .collection('people')
+        .where('uid', isEqualTo: uid)
+        .get();
+    DocumentReference userRef = peopleQs.docs.first.reference;
 
-    for (QueryDocumentSnapshot barnDoc in qs.docs) {
+    QuerySnapshot barnRefQs = await FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .where('personid', isEqualTo: userRef)
+        .get();
+
+    for (DocumentSnapshot doc in barnRefQs.docs) {
+      //get refernce to the barn the user is a part of
+      DocumentReference barnRef = doc.get('barnid');
+
+      // get the barn document
+      DocumentSnapshot barnDoc = await barnRef.get();
+
       Barn barn =
           Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 

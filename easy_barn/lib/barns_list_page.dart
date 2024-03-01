@@ -201,7 +201,8 @@ class _BarnList extends State<BarnList> {
           name: person['name'] ?? '',
           phoneNumber: person['number'] ?? '',
           emergencyPerson: person['emergencyPerson'] ?? '',
-          emergencyNumber: person['emergencyNumber'] ?? '');
+          emergencyNumber: person['emergencyNumber'] ?? '',
+          uid: person['uid'] ?? '');
       return personToReturn;
     } else {
       return Person(
@@ -209,7 +210,8 @@ class _BarnList extends State<BarnList> {
           name: "",
           phoneNumber: "",
           emergencyPerson: "",
-          emergencyNumber: "");
+          emergencyNumber: "",
+          uid: "");
     }
   }
 
