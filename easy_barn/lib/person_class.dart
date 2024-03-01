@@ -19,7 +19,8 @@ class Person {
       'name': name,
       'number': phoneNumber,
       'emergencyPerson': emergencyPerson,
-      'emergencyNumber': emergencyNumber
+      'emergencyNumber': emergencyNumber,
+      'uid': uid
     };
   }
 }

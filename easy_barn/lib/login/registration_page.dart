@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/login/log_in_page.dart';
+import 'package:easy_barn/person_class.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -13,6 +16,25 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPage extends State<RegistrationPage> {
   final _registrationFormKey = GlobalKey<FormBuilderState>();
 
+  Person newUser = Person(
+      id: "",
+      name: "",
+      phoneNumber: "",
+      emergencyPerson: "",
+      emergencyNumber: "",
+      uid: "");
+
+  String email = "";
+  String password = "";
+
+  bool _fullNameHasError = false;
+  bool _phoneNumberHasError = false;
+  bool _emergencyPersonHasError = false;
+  bool _emergencyPhoneHasError = false;
+  bool _emailHasError = false;
+  bool _passwordHasError = false;
+  bool _passwordConfirmationHasError = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +47,7 @@ class _RegistrationPage extends State<RegistrationPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Create an Account',
                     style: TextStyle(
                       fontSize: 30.0,
@@ -39,63 +61,151 @@ class _RegistrationPage extends State<RegistrationPage> {
                       hintText: 'Enter your full name',
                       labelText: 'Full Name',
                       border: OutlineInputBorder(),
+                      suffixIcon: _fullNameHasError
+                          ? const Icon(Icons.error, color: Colors.red)
+                          : const Icon(Icons.check, color: Colors.green),
                     ),
-                    validator: FormBuilderValidators.required(),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.match('^[a-zA-Z \-]+\$'),
+                      FormBuilderValidators.maxLength(40),
+                    ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _fullNameHasError = !(_registrationFormKey
+                                .currentState?.fields['full_name']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_fullNameHasError) {
+                        newUser.name = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'phone_number',
                     decoration: InputDecoration(
-                      hintText: 'Enter your phone number',
-                      labelText: 'Phone Number',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: FormBuilderValidators.required(),
+                        hintText: 'Enter your phone number',
+                        labelText: 'Phone Number',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _phoneNumberHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.match(
+                          '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
+                      FormBuilderValidators.maxLength(12),
+                    ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _phoneNumberHasError = !(_registrationFormKey
+                                .currentState?.fields['phone_number']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_phoneNumberHasError) {
+                        newUser.phoneNumber = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'emergency_contact',
                     decoration: InputDecoration(
-                      hintText: 'Enter your emergency contact',
-                      labelText: 'Emergency Contact Name',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: FormBuilderValidators.required(),
+                        hintText: 'Enter your emergency contact',
+                        labelText: 'Emergency Contact Name',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _emergencyPersonHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.match('^[a-zA-Z \n\t\-]+\$'),
+                      FormBuilderValidators.maxLength(30),
+                    ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _emergencyPersonHasError = !(_registrationFormKey
+                                .currentState?.fields['emergency_contact']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_emergencyPersonHasError) {
+                        newUser.phoneNumber = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'emergency_contact_phone',
                     decoration: InputDecoration(
-                      hintText: 'Enter your emergency contact\'s phone number',
-                      labelText: 'Emergency Contact\'s Phone Number',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: FormBuilderValidators.required(),
+                        hintText:
+                            'Enter your emergency contact\'s phone number',
+                        labelText: 'Emergency Contact\'s Phone Number',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _emergencyPhoneHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.match(
+                          '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
+                      FormBuilderValidators.maxLength(12),
+                    ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _emergencyPhoneHasError = !(_registrationFormKey
+                                .currentState?.fields['emergency_contact_phone']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_emergencyPhoneHasError) {
+                        newUser.emergencyNumber = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'email',
                     decoration: InputDecoration(
-                      hintText: 'Enter your email',
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
+                        hintText: 'Enter your email',
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _emailHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.email(),
                     ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _emailHasError = !(_registrationFormKey
+                                .currentState?.fields['email']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_emailHasError) {
+                        email = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'password',
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Enter your password',
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
+                        hintText: 'Enter your password',
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _passwordHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
+                      FormBuilderValidators.match('^[a-zA-Z0-9 \.\$#!\-]+\$'),
                       FormBuilderValidators.minLength(6),
                     ]),
                   ),
@@ -104,10 +214,12 @@ class _RegistrationPage extends State<RegistrationPage> {
                     name: 'confirm_password',
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Re-enter your password',
-                      labelText: 'Confirm Password',
-                      border: OutlineInputBorder(),
-                    ),
+                        hintText: 'Re-enter your password',
+                        labelText: 'Confirm Password',
+                        border: OutlineInputBorder(),
+                        suffixIcon: _passwordConfirmationHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : const Icon(Icons.check, color: Colors.green)),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       (val) {
@@ -119,14 +231,30 @@ class _RegistrationPage extends State<RegistrationPage> {
                         return null;
                       },
                     ]),
+                    onChanged: (value) {
+                      setState(() {
+                        _passwordConfirmationHasError = !(_registrationFormKey
+                                .currentState?.fields['confirm_password']
+                                ?.validate() ??
+                            false);
+                      });
+                      if (!_passwordConfirmationHasError) {
+                        password = value!;
+                      }
+                    },
                   ),
                   SizedBox(height: 30.0),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_registrationFormKey.currentState!
                           .saveAndValidate()) {
                         // Implement registration functionality here
-                        print(_registrationFormKey.currentState!.value);
+                        await registerUser();
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -162,5 +290,27 @@ class _RegistrationPage extends State<RegistrationPage> {
         ),
       ),
     );
+  }
+
+  Future<void> registerUser() async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // User registration successful
+      newUser.uid = userCredential.user!.uid;
+
+      DocumentReference doc = await FirebaseFirestore.instance
+          .collection('people')
+          .add(newUser.toMap());
+
+      newUser.id = doc.id;
+    } catch (e) {
+      // User registration failed
+      print('Failed to register user: $e');
+      // Handle error
+    }
   }
 }

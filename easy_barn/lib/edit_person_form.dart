@@ -161,7 +161,7 @@ class _EditPersonForm extends State<EditPersonForm> {
                       FormBuilderValidators.required(),
                       FormBuilderValidators.match(
                           '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
-                      FormBuilderValidators.maxLength(16),
+                      FormBuilderValidators.maxLength(12),
                     ]),
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.next,
