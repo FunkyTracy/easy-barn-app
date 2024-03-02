@@ -6,6 +6,7 @@ import 'package:easy_barn/login/registration_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -116,14 +117,14 @@ class _LoginPage extends State<LoginPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => buildBarnPage(userUid)));
+                      } on PlatformException catch (e) {
+                        setState(() {});
+                        _emailHasError = true;
+                        _passwordHasError = true;
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          _emailHasError = true;
-                          _passwordHasError = true;
-                        } else if (e.code == 'wrong-password') {
-                          _emailHasError = true;
-                          _passwordHasError = true;
-                        }
+                        setState(() {});
+                        _emailHasError = true;
+                        _passwordHasError = true;
                       }
                     }
                   },

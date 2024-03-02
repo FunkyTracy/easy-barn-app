@@ -3,7 +3,9 @@ import 'package:easy_barn/barn_details_page.dart';
 import 'package:easy_barn/create_animal_form.dart';
 import 'package:easy_barn/create_barn_form.dart';
 import 'package:easy_barn/create_person_form.dart';
+import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'animal_class.dart';
@@ -168,6 +170,29 @@ class _AnimalList extends State<AnimalList> {
               color: Colors.blueGrey.shade800,
               thickness: 1,
             ),
+            ListTile(
+              title: const Text("Logout"),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+
+                main.MyApp.animals.isNotEmpty ? main.MyApp.animals.clear() : {};
+                main.MyApp.barnList.isNotEmpty
+                    ? main.MyApp.barnList.clear()
+                    : {};
+                main.MyApp.people.isNotEmpty ? main.MyApp.people.clear() : {};
+
+                // return to log in page
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            )
           ],
         ),
         body: Container(
