@@ -144,6 +144,67 @@ class _BarnList extends State<BarnList> {
             thickness: 1,
           ),
           ListTile(
+              title: const Text("Join Barn"),
+              onTap: () {
+                String barnToJoin = "";
+
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Join Barn'),
+                        content: Column(
+                          children: [
+                            const Text(
+                                "Enter the invite code for the barn\n you wish to join"),
+                            TextFormField(
+                              onChanged: (value) {
+                                barnToJoin = value;
+                              },
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      linkPersonToBarn(barnToJoin);
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: const Text(
+                                      'Join Barn',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 37, 109, 168)),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 37, 109, 168)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    });
+                setState(() {});
+              }),
+          Divider(
+            height: 1,
+            color: Colors.blueGrey.shade800,
+            thickness: 1,
+          ),
+          ListTile(
             title: const Text("Logout"),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
@@ -286,5 +347,19 @@ class _BarnList extends State<BarnList> {
     int index =
         main.MyApp.barnList.indexWhere((element) => element.id == barn.id);
     main.MyApp.barnList.removeAt(index);
+  }
+
+  Future<void> linkPersonToBarn(String barnid) async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnid);
+    DocumentReference personRef = FirebaseFirestore.instance
+        .collection('people')
+        .doc(main.MyApp.currentUser.id);
+
+    //TODO: add check to make sure document doesn't already exist
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
   }
 }

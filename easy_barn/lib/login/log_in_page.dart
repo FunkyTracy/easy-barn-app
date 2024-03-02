@@ -4,6 +4,7 @@ import 'package:easy_barn/barns_list_page.dart';
 import 'package:easy_barn/firebase_options.dart';
 import 'package:easy_barn/login/registration_page.dart';
 import 'package:easy_barn/main.dart';
+import 'package:easy_barn/person_class.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -186,6 +187,17 @@ class _LoginPage extends State<LoginPage> {
         .where('uid', isEqualTo: uid)
         .get();
     DocumentReference userRef = peopleQs.docs.first.reference;
+
+    DocumentSnapshot userInfo = await userRef.get();
+    Map<String, dynamic> user = userInfo.data() as Map<String, dynamic>;
+
+    MyApp.currentUser = Person(
+        id: userInfo.id,
+        name: user['name'] ?? '',
+        phoneNumber: user['number'] ?? '',
+        emergencyPerson: user['emergencyPerson'] ?? '',
+        emergencyNumber: user['emergencyNumber'] ?? '',
+        uid: user['uid'] ?? '');
 
     QuerySnapshot barnRefQs = await FirebaseFirestore.instance
         .collection('barn_to_person')

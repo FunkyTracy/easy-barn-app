@@ -20,6 +20,14 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static Person currentUser = Person(
+      id: "",
+      name: "",
+      phoneNumber: "",
+      emergencyPerson: "",
+      emergencyNumber: "",
+      uid: "");
+
   //hardcoded barns in barn_class
   static List<Barn> barnList = List<Barn>.empty();
   static Barn selectedBarn =
@@ -103,17 +111,16 @@ class _MyApp extends State<MyApp> {
           useMaterial3: true,
         ),
         home: const LoginPage());
-    /*FutureBuilder<List<Barn>>(
-            future: getBarnsFromDatabase(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (!(snapshot.data == null)) {
-                MyApp.barnList = snapshot.data!;
-                return const BarnListPage.BarnList();
-              } else {
-                return Text('Error: ${snapshot.error}');
-              }
-            }));*/
+  }
+
+  Future<void> linkPersonToBarn(String barnid) async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnid);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc();
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
   }
 }
