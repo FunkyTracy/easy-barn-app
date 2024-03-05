@@ -3,7 +3,6 @@ import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/create_animal_form.dart';
 import 'package:easy_barn/create_barn_form.dart';
-import 'package:easy_barn/create_person_form.dart';
 import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -106,16 +105,9 @@ class _BarnList extends State<BarnList> {
                     return AlertDialog(
                         title: const Text('Add New'),
                         content: SizedBox(
-                            height: 200,
-                            child: Column(children: [
-                              TextButton(
-                                  onPressed: () async {
-                                    Navigator.of(ctx).push(MaterialPageRoute(
-                                        builder: (ctx) =>
-                                            const CreatePersonForm()));
-                                    setState(() {});
-                                  },
-                                  child: const Text('Add Person')),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                               TextButton(
                                   onPressed: () async {
                                     await Navigator.of(ctx).push(
@@ -154,6 +146,7 @@ class _BarnList extends State<BarnList> {
                       return AlertDialog(
                         title: const Text('Join Barn'),
                         content: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
                                 "Enter the invite code for the barn\n you wish to join"),
@@ -167,7 +160,24 @@ class _BarnList extends State<BarnList> {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      linkPersonToBarn(barnToJoin);
+                                      if (main.MyApp.barnList.isNotEmpty &&
+                                          main.MyApp.barnList.firstWhere(
+                                                  (element) =>
+                                                      element.id == barnToJoin,
+                                                  orElse: () => Barn(
+                                                      id: "",
+                                                      address: "",
+                                                      name: "",
+                                                      ownerid: "",
+                                                      phoneNumber: "")) ==
+                                              Barn(
+                                                  id: "",
+                                                  address: "",
+                                                  name: "",
+                                                  ownerid: "",
+                                                  phoneNumber: "")) {
+                                        linkPersonToBarn(barnToJoin);
+                                      }
                                       Navigator.of(ctx).pop();
                                     },
                                     child: const Text(
@@ -355,8 +365,6 @@ class _BarnList extends State<BarnList> {
     DocumentReference personRef = FirebaseFirestore.instance
         .collection('people')
         .doc(main.MyApp.currentUser.id);
-
-    //TODO: add check to make sure document doesn't already exist
 
     FirebaseFirestore.instance
         .collection('barn_to_person')

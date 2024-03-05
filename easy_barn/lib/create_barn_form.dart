@@ -250,7 +250,6 @@ class _CreateBarnForm extends State<CreateBarnForm> {
     }
   }
 
-  //TODO: is there a more efficient way to link these two here rather than making more calls to the database?
   Future<void> linkPersonToBarn() async {
     DocumentReference barnRef =
         FirebaseFirestore.instance.collection('barns').doc(newBarn.id);
