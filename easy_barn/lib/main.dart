@@ -29,11 +29,11 @@ class MyApp extends StatefulWidget {
       uid: "");
 
   //hardcoded barns in barn_class
-  static List<Barn> barnList = List<Barn>.empty();
+  static List<Barn> barnList = List<Barn>.empty(growable: true);
   static Barn selectedBarn =
       Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 
-  static List<Animal> animals = List<Animal>.empty();
+  static List<Animal> animals = List<Animal>.empty(growable: true);
   static Animal selectedAnimal = Animal(
       id: "",
       description: "",
@@ -45,7 +45,7 @@ class MyApp extends StatefulWidget {
       name: "",
       ownerid: "");
 
-  static List<Person> people = List<Person>.empty();
+  static List<Person> people = List<Person>.empty(growable: true);
   static Person selectedPerson = Person(
       id: "",
       name: "",

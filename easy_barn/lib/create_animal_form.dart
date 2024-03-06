@@ -31,9 +31,10 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
   bool _farrierHasError = false;
   bool _barnHasError = false;
 
-  List<Person> allPeople = [];
   String barnId = "";
-
+  List<String> ownerField = [
+    "Please select the owner in the edit animal page after you are finished creating the animal. Owner will default to current user"
+  ];
   static Animal newAnimal = Animal(
       id: "",
       description: "",
@@ -43,15 +44,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
       vet: "",
       farrier: "",
       name: "",
-      ownerid: "");
-
-  @override
-  void initState() {
-    super.initState();
-    getAllPeople().then((_) {
-      setState(() {});
-    });
-  }
+      ownerid: MyApp.currentUser.id);
 
   @override
   Widget build(BuildContext ctx) {
@@ -105,29 +98,29 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                     textInputAction: TextInputAction.next,
                   ),
                   FormBuilderDropdown(
-                    name: 'owner',
+                    name: 'placement_barn',
                     decoration: InputDecoration(
-                        labelText: 'Owner',
-                        suffix: _ownerHasError
+                        labelText: 'Barn',
+                        suffix: _barnHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green),
-                        hintText: 'Select owner of the animal'),
+                        hintText: 'Select barn to add animal to'),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required()]),
-                    items: allPeople
-                        .map((person) => DropdownMenuItem(
-                              child: Text(person.name),
-                              value: person,
+                    items: MyApp.barnList
+                        .map((barn) => DropdownMenuItem(
+                              child: Text(barn.name),
+                              value: barn,
                               alignment: AlignmentDirectional.center,
                               onTap: () {
-                                newAnimal.ownerid = person.id;
+                                barnId = barn.id;
                               },
                             ))
                         .toList(),
-                    onChanged: (value) async {
+                    onChanged: (value) {
                       setState(() {
-                        _ownerHasError = !(_createAnimalFormKey
-                                .currentState?.fields['owner']
+                        _barnHasError = !(_createAnimalFormKey
+                                .currentState?.fields['placement_barn']
                                 ?.validate() ??
                             false);
                       });
@@ -307,37 +300,20 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.next,
                   ),
+                  FormBuilderDropdown(
+                    name: 'owner',
+                    decoration: const InputDecoration(
+                      labelText: 'Owner',
+                    ),
+                    items: ownerField
+                        .map((e) => DropdownMenuItem(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                  ),
                 ],
               )),
-          FormBuilderDropdown(
-            name: 'placement_barn',
-            decoration: InputDecoration(
-                labelText: 'Barn',
-                suffix: _barnHasError
-                    ? const Icon(Icons.error, color: Colors.red)
-                    : const Icon(Icons.check, color: Colors.green),
-                hintText: 'Select barn to add animal to'),
-            validator: FormBuilderValidators.compose(
-                [FormBuilderValidators.required()]),
-            items: MyApp.barnList
-                .map((barn) => DropdownMenuItem(
-                      child: Text(barn.name),
-                      value: barn,
-                      alignment: AlignmentDirectional.center,
-                      onTap: () {
-                        barnId = barn.id;
-                      },
-                    ))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _barnHasError = !(_createAnimalFormKey
-                        .currentState?.fields['placement_barn']
-                        ?.validate() ??
-                    false);
-              });
-            },
-          ),
           Row(
             children: <Widget>[
               Expanded(
@@ -361,6 +337,17 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                   ),
                 ),
               ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(ctx).maybePop();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Color.fromARGB(255, 37, 109, 168)),
+                  ),
+                ),
+              )
             ],
           )
         ])));
@@ -369,8 +356,9 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
   Future<void> addAnimalToDatabase() async {
     DocumentReference barnRef =
         FirebaseFirestore.instance.collection('barns').doc(barnId);
-    DocumentReference personRef =
-        FirebaseFirestore.instance.collection('people').doc(newAnimal.ownerid);
+    DocumentReference personRef = FirebaseFirestore.instance
+        .collection('people')
+        .doc(MyApp.currentUser.id);
 
     DocumentReference animalRef =
         await FirebaseFirestore.instance.collection('animals').add({
@@ -387,23 +375,5 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
 
     newAnimal.id = animalRef.id;
     MyApp.animals.add(newAnimal);
-  }
-
-  Future<void> getAllPeople() async {
-    QuerySnapshot qs =
-        await FirebaseFirestore.instance.collection('people').get();
-
-    for (QueryDocumentSnapshot doc in qs.docs) {
-      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
-      Person person = Person(
-          id: doc.id,
-          name: item['name'] ?? '',
-          phoneNumber: item['number'] ?? '',
-          emergencyPerson: item['emergencyPerson'] ?? '',
-          emergencyNumber: item['emergencyNumber'] ?? '',
-          uid: item['uid'] ?? '');
-
-      allPeople.add(person);
-    }
   }
 }
