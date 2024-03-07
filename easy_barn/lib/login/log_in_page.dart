@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/barns_list_page.dart';
+import 'package:easy_barn/login/forgot_password.dart';
 import 'package:easy_barn/login/registration_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:easy_barn/person_class.dart';
@@ -49,13 +50,13 @@ class _LoginPage extends State<LoginPage> {
                     style: GoogleFonts.bitter(
                         textStyle: const TextStyle(
                             color: Color.fromARGB(255, 51, 91, 122),
-                            fontSize: 50,
+                            fontSize: 40,
                             fontWeight: FontWeight.w600))),
                 Text('Welcome Back!',
                     style: GoogleFonts.bitter(
                         textStyle: const TextStyle(
                             color: Color.fromARGB(255, 51, 91, 122),
-                            fontSize: 28,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600))),
                 const SizedBox(height: 30.0),
                 FormBuilderTextField(
@@ -158,6 +159,23 @@ class _LoginPage extends State<LoginPage> {
                   },
                   child: const Text(
                     'Don\'t have an account? Register here',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 51, 91, 122),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Forgot password? Update here',
                     style: TextStyle(
                       color: Color.fromARGB(255, 51, 91, 122),
                       fontWeight: FontWeight.bold,
