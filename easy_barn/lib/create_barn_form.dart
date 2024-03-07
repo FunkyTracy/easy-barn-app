@@ -22,20 +22,15 @@ class _CreateBarnForm extends State<CreateBarnForm> {
   bool _nameHasError = false;
   bool _phoneHasError = false;
   bool _addressHasError = false;
-  bool _ownerHasError = false;
 
   List<Person> allPeople = [];
 
-  Barn newBarn =
-      Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
-
-  @override
-  void initState() {
-    super.initState();
-    getAllPeople().then((_) {
-      setState(() {});
-    });
-  }
+  Barn newBarn = Barn(
+      id: "",
+      address: "",
+      name: "",
+      ownerid: MyApp.currentUser.id,
+      phoneNumber: "");
 
   @override
   Widget build(BuildContext ctx) {
@@ -58,124 +53,101 @@ class _CreateBarnForm extends State<CreateBarnForm> {
               onChanged: () {
                 _createBarnFormKey.currentState!.save();
               },
-              child: Column(
-                children: <Widget>[
-                  FormBuilderTextField(
-                    name: 'name',
-                    maxLines: null,
-                    autovalidateMode: AutovalidateMode.always,
-                    decoration: InputDecoration(
-                        labelText: 'Name',
-                        suffixIcon: _nameHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
-                      setState(() {
-                        _nameHasError = !(_createBarnFormKey
-                                .currentState?.fields['name']
-                                ?.validate() ??
-                            false);
-                      });
-                      if (!_nameHasError) {
-                        newBarn.name = value!;
-                      }
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.match('^[a-zA-Z \-]+\$'),
-                      FormBuilderValidators.maxLength(40),
-                    ]),
-                    keyboardType: TextInputType.name,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    name: 'phone',
-                    maxLines: null,
-                    autovalidateMode: AutovalidateMode.always,
-                    decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        suffixIcon: _phoneHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
-                      setState(() {
-                        _phoneHasError = !(_createBarnFormKey
-                                .currentState?.fields['phone']
-                                ?.validate() ??
-                            false);
-                      });
-                      if (!_phoneHasError) {
-                        newBarn.phoneNumber = value!;
-                      }
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.match(
-                          '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
-                      FormBuilderValidators.maxLength(12),
-                    ]),
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    name: 'address',
-                    maxLines: null,
-                    autovalidateMode: AutovalidateMode.always,
-                    decoration: InputDecoration(
-                        labelText: 'Address',
-                        suffixIcon: _addressHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green)),
-                    onChanged: (value) {
-                      setState(() {
-                        _addressHasError = !(_createBarnFormKey
-                                .currentState?.fields['address']
-                                ?.validate() ??
-                            false);
-                      });
-                      if (!_addressHasError) {
-                        newBarn.address = value!;
-                      }
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.match('^[a-zA-Z0-9\., \n\t\-]+\$'),
-                      FormBuilderValidators.maxLength(60),
-                    ]),
-                    keyboardType: TextInputType.streetAddress,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderDropdown(
-                    name: 'owner',
-                    decoration: InputDecoration(
-                        labelText: 'Owner',
-                        suffix: _ownerHasError
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : const Icon(Icons.check, color: Colors.green),
-                        hintText: 'Select owner of the barn'),
-                    validator: FormBuilderValidators.compose(
-                        [FormBuilderValidators.required()]),
-                    items: allPeople
-                        .map((person) => DropdownMenuItem(
-                              child: Text(person.name),
-                              value: person,
-                              alignment: AlignmentDirectional.center,
-                              onTap: () {
-                                newBarn.ownerid = person.id;
-                              },
-                            ))
-                        .toList(),
-                    onChanged: (value) async {
-                      setState(() {
-                        _ownerHasError = !(_createBarnFormKey
-                                .currentState?.fields['owner']
-                                ?.validate() ??
-                            false);
-                      });
-                    },
-                  ),
-                ],
-              )),
+              child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      FormBuilderTextField(
+                        name: 'name',
+                        maxLines: null,
+                        autovalidateMode: AutovalidateMode.always,
+                        decoration: InputDecoration(
+                            labelText: 'Name',
+                            suffixIcon: _nameHasError
+                                ? const Icon(Icons.error, color: Colors.red)
+                                : const Icon(Icons.check, color: Colors.green)),
+                        onChanged: (value) {
+                          setState(() {
+                            _nameHasError = !(_createBarnFormKey
+                                    .currentState?.fields['name']
+                                    ?.validate() ??
+                                false);
+                          });
+                          if (!_nameHasError) {
+                            newBarn.name = value!;
+                          }
+                        },
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.match('^[a-zA-Z \-]+\$'),
+                          FormBuilderValidators.maxLength(40),
+                        ]),
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(height: 20.0),
+                      FormBuilderTextField(
+                        name: 'phone',
+                        maxLines: null,
+                        autovalidateMode: AutovalidateMode.always,
+                        decoration: InputDecoration(
+                            labelText: 'Phone Number',
+                            suffixIcon: _phoneHasError
+                                ? const Icon(Icons.error, color: Colors.red)
+                                : const Icon(Icons.check, color: Colors.green)),
+                        onChanged: (value) {
+                          setState(() {
+                            _phoneHasError = !(_createBarnFormKey
+                                    .currentState?.fields['phone']
+                                    ?.validate() ??
+                                false);
+                          });
+                          if (!_phoneHasError) {
+                            newBarn.phoneNumber = value!;
+                          }
+                        },
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.match(
+                              '^[0-9]{3}[\-\. ]?[0-9]{3}[\-\. ]?[0-9]{4}\$'),
+                          FormBuilderValidators.maxLength(12),
+                        ]),
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(height: 20.0),
+                      FormBuilderTextField(
+                        name: 'address',
+                        maxLines: null,
+                        autovalidateMode: AutovalidateMode.always,
+                        decoration: InputDecoration(
+                            labelText: 'Address',
+                            suffixIcon: _addressHasError
+                                ? const Icon(Icons.error, color: Colors.red)
+                                : const Icon(Icons.check, color: Colors.green)),
+                        onChanged: (value) {
+                          setState(() {
+                            _addressHasError = !(_createBarnFormKey
+                                    .currentState?.fields['address']
+                                    ?.validate() ??
+                                false);
+                          });
+                          if (!_addressHasError) {
+                            newBarn.address = value!;
+                          }
+                        },
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.match(
+                              '^[a-zA-Z0-9\., \n\t\-]+\$'),
+                          FormBuilderValidators.maxLength(60),
+                        ]),
+                        keyboardType: TextInputType.streetAddress,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ],
+                  ))),
+          SizedBox(height: 20.0),
           Row(
             children: <Widget>[
               Expanded(
@@ -230,24 +202,6 @@ class _CreateBarnForm extends State<CreateBarnForm> {
 
     newBarn.id = barnRef.id;
     MyApp.barnList.add(newBarn);
-  }
-
-  Future<void> getAllPeople() async {
-    QuerySnapshot qs =
-        await FirebaseFirestore.instance.collection('people').get();
-
-    for (QueryDocumentSnapshot doc in qs.docs) {
-      Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
-      Person person = Person(
-          id: doc.id,
-          name: item['name'] ?? '',
-          phoneNumber: item['number'] ?? '',
-          emergencyPerson: item['emergencyPerson'] ?? '',
-          emergencyNumber: item['emergencyNumber'] ?? '',
-          uid: item['uid'] ?? '');
-
-      allPeople.add(person);
-    }
   }
 
   Future<void> linkPersonToBarn() async {

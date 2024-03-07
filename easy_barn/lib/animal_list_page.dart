@@ -92,7 +92,7 @@ class _AnimalList extends State<AnimalList> {
                               fontWeight: FontWeight.w600)),
                     )))),
             ListTile(
-              title: const Text("Add New"),
+              title: const Text("Add New Barn or Animal"),
               onTap: () {
                 showDialog(
                     context: context,
@@ -131,33 +131,7 @@ class _AnimalList extends State<AnimalList> {
               thickness: 1,
             ),
             ListTile(
-              title: const Text("Barn Information"),
-              onTap: () async {
-                await Navigator.of(ctx).push(MaterialPageRoute(
-                    builder: (ctx) => const BarnDetailPage()));
-                setState(() {});
-              },
-            ),
-            Divider(
-              height: 1,
-              color: Colors.blueGrey.shade800,
-              thickness: 1,
-            ),
-            ListTile(
-              title: const Text("Barn Members"),
-              onTap: () async {
-                await Navigator.of(ctx).push(
-                    MaterialPageRoute(builder: (ctx) => const PeopleList()));
-                setState(() {});
-              },
-            ),
-            Divider(
-              height: 1,
-              color: Colors.blueGrey.shade800,
-              thickness: 1,
-            ),
-            ListTile(
-                title: const Text("Join Barn"),
+                title: const Text("Join Existing Barn"),
                 onTap: () {
                   String barnToJoin = "";
 
@@ -173,7 +147,7 @@ class _AnimalList extends State<AnimalList> {
                                   "Enter the invite code for the barn\n you wish to join"),
                               TextFormField(
                                 onChanged: (value) {
-                                  barnToJoin = value;
+                                  barnToJoin = value.trim();
                                 },
                               ),
                               Row(
@@ -182,24 +156,22 @@ class _AnimalList extends State<AnimalList> {
                                     child: ElevatedButton(
                                       onPressed: () async {
                                         if (main.MyApp.barnList.isEmpty ||
-                                            main.MyApp.barnList.firstWhere(
-                                                    (element) =>
-                                                        element.id ==
-                                                        barnToJoin,
-                                                    orElse: () => Barn(
-                                                        id: "",
-                                                        address: "",
-                                                        name: "",
-                                                        ownerid: "",
-                                                        phoneNumber: "")) ==
-                                                Barn(
-                                                    id: "",
-                                                    address: "",
-                                                    name: "",
-                                                    ownerid: "",
-                                                    phoneNumber: "")) {
+                                            main.MyApp.barnList
+                                                    .firstWhere(
+                                                        (element) =>
+                                                            element.id ==
+                                                            barnToJoin,
+                                                        orElse: () => Barn(
+                                                            id: "na",
+                                                            address: "",
+                                                            name: "",
+                                                            ownerid: "",
+                                                            phoneNumber: ""))
+                                                    .id ==
+                                                "na") {
                                           linkPersonToBarn(barnToJoin);
                                         }
+                                        setState(() {});
                                         Navigator.of(ctx).pop();
                                       },
                                       child: const Text(
@@ -231,6 +203,32 @@ class _AnimalList extends State<AnimalList> {
                       });
                   setState(() {});
                 }),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
+              title: const Text("Barn Information"),
+              onTap: () async {
+                await Navigator.of(ctx).push(MaterialPageRoute(
+                    builder: (ctx) => const BarnDetailPage()));
+                setState(() {});
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
+              title: const Text("Barn Members"),
+              onTap: () async {
+                await Navigator.of(ctx).push(
+                    MaterialPageRoute(builder: (ctx) => const PeopleList()));
+                setState(() {});
+              },
+            ),
             Divider(
               height: 1,
               color: Colors.blueGrey.shade800,
@@ -289,8 +287,28 @@ class _AnimalList extends State<AnimalList> {
         .collection('people')
         .doc(main.MyApp.currentUser.id);
 
+    DocumentSnapshot barnInfo = await barnRef.get();
+    Map<String, dynamic> barn = barnInfo.data() as Map<String, dynamic>;
+    String ownerid = await getBarnOwner(barn['owner']);
+    main.MyApp.barnList.add(Barn(
+      id: barnRef.id,
+      address: barn['address'] ?? '',
+      name: barn['name'] ?? '',
+      phoneNumber: barn['number'] ?? '',
+      ownerid: ownerid,
+    ));
+
     FirebaseFirestore.instance
         .collection('barn_to_person')
         .add({'barnid': barnRef, 'personid': personRef});
+  }
+
+  Future<String> getBarnOwner(DocumentReference ownerRef) async {
+    DocumentSnapshot ownerSnapshot = await ownerRef.get();
+    if (ownerSnapshot.exists) {
+      return ownerSnapshot.id;
+    } else {
+      return '';
+    }
   }
 }

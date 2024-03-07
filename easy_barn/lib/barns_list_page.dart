@@ -37,31 +37,43 @@ class _BarnList extends State<BarnList> {
                   builder: (ctx) => animalList.AnimalList(name: barn.name)));
             },
             onLongPress: () async {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Delete Barn'),
-                      content: const Text(
-                          'You are about to delete the selected Barn which will delete all animals'
-                          'within it and remove the barn from any boarders\' accounts.\n'
-                          'Is this really what you want?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () async {
-                              await deleteBarn(barn);
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                            child: const Text('Delete')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Cancel'))
-                      ],
-                    );
-                  });
+              if (main.MyApp.currentUser.id == barn.ownerid) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Delete Barn'),
+                        content: const Text(
+                            'You are about to delete the selected Barn which will delete all animals'
+                            'within it and remove the barn from any boarders\' accounts.\n'
+                            'Is this really what you want?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () async {
+                                await deleteBarn(barn);
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
+                              child: const Text('Delete')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'))
+                        ],
+                      );
+                    });
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Delete Barn'),
+                        content: Text(
+                            "If you wish to be removed from the barn, please contact the barn owner"),
+                      );
+                    });
+              }
             },
           ),
         );
@@ -91,7 +103,7 @@ class _BarnList extends State<BarnList> {
                             fontWeight: FontWeight.w600)),
                   )))),
           ListTile(
-            title: const Text("Add New"),
+            title: const Text("Add New Barn or Animal"),
             onTap: () {
               showDialog(
                   context: context,
@@ -130,7 +142,7 @@ class _BarnList extends State<BarnList> {
             thickness: 1,
           ),
           ListTile(
-              title: const Text("Join Barn"),
+              title: const Text("Join Existing Barn"),
               onTap: () {
                 String barnToJoin = "";
 
@@ -146,7 +158,7 @@ class _BarnList extends State<BarnList> {
                                 "Enter the invite code for the barn\n you wish to join"),
                             TextFormField(
                               onChanged: (value) {
-                                barnToJoin = value;
+                                barnToJoin = value.trim();
                               },
                             ),
                             Row(
@@ -155,23 +167,22 @@ class _BarnList extends State<BarnList> {
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       if (main.MyApp.barnList.isEmpty ||
-                                          main.MyApp.barnList.firstWhere(
-                                                  (element) =>
-                                                      element.id == barnToJoin,
-                                                  orElse: () => Barn(
-                                                      id: "",
-                                                      address: "",
-                                                      name: "",
-                                                      ownerid: "",
-                                                      phoneNumber: "")) ==
-                                              Barn(
-                                                  id: "",
-                                                  address: "",
-                                                  name: "",
-                                                  ownerid: "",
-                                                  phoneNumber: "")) {
-                                        linkPersonToBarn(barnToJoin);
+                                          main.MyApp.barnList
+                                                  .firstWhere(
+                                                      (element) =>
+                                                          element.id ==
+                                                          barnToJoin,
+                                                      orElse: () => Barn(
+                                                          id: "na",
+                                                          address: "",
+                                                          name: "",
+                                                          ownerid: "",
+                                                          phoneNumber: ""))
+                                                  .id ==
+                                              "na") {
+                                        await linkPersonToBarn(barnToJoin);
                                       }
+                                      setState(() {});
                                       Navigator.of(ctx).pop();
                                     },
                                     child: const Text(
@@ -360,8 +371,28 @@ class _BarnList extends State<BarnList> {
         .collection('people')
         .doc(main.MyApp.currentUser.id);
 
-    FirebaseFirestore.instance
+    DocumentSnapshot barnInfo = await barnRef.get();
+    Map<String, dynamic> barn = barnInfo.data() as Map<String, dynamic>;
+    String ownerid = await getBarnOwner(barn['owner']);
+    main.MyApp.barnList.add(Barn(
+      id: barnRef.id,
+      address: barn['address'] ?? '',
+      name: barn['name'] ?? '',
+      phoneNumber: barn['number'] ?? '',
+      ownerid: ownerid,
+    ));
+
+    await FirebaseFirestore.instance
         .collection('barn_to_person')
         .add({'barnid': barnRef, 'personid': personRef});
+  }
+
+  Future<String> getBarnOwner(DocumentReference ownerRef) async {
+    DocumentSnapshot ownerSnapshot = await ownerRef.get();
+    if (ownerSnapshot.exists) {
+      return ownerSnapshot.id;
+    } else {
+      return '';
+    }
   }
 }
