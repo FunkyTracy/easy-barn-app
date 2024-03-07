@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/main.dart';
-import 'package:easy_barn/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-// '[^\s!@#\$%^&*(){}[]:;\'"<>?/\\_]+'
 
 class CreateAnimalForm extends StatefulWidget {
   const CreateAnimalForm({super.key});
@@ -22,7 +19,6 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
   final _createAnimalFormKey = GlobalKey<FormBuilderState>();
 
   bool _nameHasError = false;
-  bool _ownerHasError = false;
   bool _descriptionHasError = false;
   bool _stallLocationHasError = false;
   bool _feedingHasError = false;

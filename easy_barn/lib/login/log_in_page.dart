@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/barns_list_page.dart';
-import 'package:easy_barn/firebase_options.dart';
 import 'package:easy_barn/login/registration_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:easy_barn/person_class.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
