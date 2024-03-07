@@ -121,6 +121,7 @@ class _BarnList extends State<BarnList> {
                                             builder: (ctx) =>
                                                 const CreateBarnForm()));
                                     setState(() {});
+                                    Navigator.of(ctx).pop();
                                   },
                                   child: const Text('Add Barn')),
                               TextButton(
@@ -130,6 +131,7 @@ class _BarnList extends State<BarnList> {
                                             builder: (ctx) =>
                                                 const CreateAnimalForm()));
                                     setState(() {});
+                                    Navigator.of(ctx).pop();
                                   },
                                   child: const Text('Add Animal'))
                             ])));
