@@ -135,7 +135,7 @@ class _RegistrationPage extends State<RegistrationPage> {
                             false);
                       });
                       if (!_emergencyPersonHasError) {
-                        newUser.phoneNumber = value!;
+                        newUser.emergencyPerson = value!;
                       }
                     },
                   ),

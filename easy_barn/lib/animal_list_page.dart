@@ -181,7 +181,7 @@ class _AnimalList extends State<AnimalList> {
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        if (main.MyApp.barnList.isNotEmpty &&
+                                        if (main.MyApp.barnList.isEmpty ||
                                             main.MyApp.barnList.firstWhere(
                                                     (element) =>
                                                         element.id ==
