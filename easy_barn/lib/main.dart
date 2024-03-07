@@ -4,6 +4,7 @@ import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './barns_list_page.dart' as BarnListPage;
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,8 +107,17 @@ class _MyApp extends State<MyApp> {
     return MaterialApp(
         title: 'EasyBarn',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 226, 157, 30)),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Color.fromARGB(255, 51, 91, 122),
+              titleTextStyle: GoogleFonts.bitter(
+                  textStyle: const TextStyle(
+                      color: Color.fromARGB(255, 244, 221, 177),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600))),
+          inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 51, 91, 122)))),
           useMaterial3: true,
         ),
         home: const LoginPage());

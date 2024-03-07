@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,7 +33,13 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FormBuilder(
+        body: Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/pexels-anna-alexes-8009841.jpg'),
+              fit: BoxFit.cover,
+              opacity: 0.25)),
+      child: FormBuilder(
         key: _loginFormKey,
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -40,20 +47,24 @@ class _LoginPage extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('EasyBarn',
+                    style: GoogleFonts.bitter(
+                        textStyle: const TextStyle(
+                            color: Color.fromARGB(255, 51, 91, 122),
+                            fontSize: 50,
+                            fontWeight: FontWeight.w600))),
+                Text('Welcome Back!',
+                    style: GoogleFonts.bitter(
+                        textStyle: const TextStyle(
+                            color: Color.fromARGB(255, 51, 91, 122),
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600))),
                 const SizedBox(height: 30.0),
                 FormBuilderTextField(
                   name: 'email',
                   decoration: InputDecoration(
                       hintText: 'Enter your email',
                       labelText: 'Email',
-                      border: OutlineInputBorder(),
                       suffixIcon: _emailHasError
                           ? const Icon(Icons.error, color: Colors.red)
                           : const Icon(Icons.check, color: Colors.green)),
@@ -80,7 +91,6 @@ class _LoginPage extends State<LoginPage> {
                   decoration: InputDecoration(
                       hintText: 'Enter your password',
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
                       suffixIcon: _passwordHasError
                           ? const Icon(Icons.error, color: Colors.red)
                           : const Icon(Icons.check, color: Colors.green)),
@@ -130,7 +140,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color.fromARGB(255, 51, 91, 122),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 80.0),
                     shape: RoundedRectangleBorder(
@@ -151,7 +161,7 @@ class _LoginPage extends State<LoginPage> {
                   child: const Text(
                     'Don\'t have an account? Register here',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Color.fromARGB(255, 51, 91, 122),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -161,7 +171,7 @@ class _LoginPage extends State<LoginPage> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget buildBarnPage(String uid) {

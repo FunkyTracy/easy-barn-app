@@ -16,14 +16,8 @@ class _BarnDetailPage extends State<BarnDetailPage> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
-          title: Text(
+          title: const Text(
             "Easy Barn",
-            style: GoogleFonts.bitter(
-                textStyle: const TextStyle(
-                    color: Color.fromARGB(255, 244, 221, 177),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600)),
           ),
           actions: <Widget>[
             Padding(
