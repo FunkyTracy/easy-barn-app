@@ -1,6 +1,5 @@
 import 'package:easy_barn/edit_animal_form.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'main.dart';
 
 class AnimalDetailPage extends StatefulWidget {
@@ -16,14 +15,8 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 244, 221, 177),
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
-          title: Text(
+          title: const Text(
             "Easy Barn",
-            style: GoogleFonts.bitter(
-                textStyle: const TextStyle(
-                    color: Color.fromARGB(255, 244, 221, 177),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600)),
           ),
           actions: <Widget>[
             Padding(

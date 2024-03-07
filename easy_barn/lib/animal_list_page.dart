@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_barn/barn_class.dart';
 import 'package:easy_barn/barn_details_page.dart';
 import 'package:easy_barn/create_animal_form.dart';
 import 'package:easy_barn/create_barn_form.dart';
-import 'package:easy_barn/create_person_form.dart';
+import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'animal_class.dart';
@@ -69,14 +71,8 @@ class _AnimalList extends State<AnimalList> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
-          title: Text(
+          title: const Text(
             "Easy Barn",
-            style: GoogleFonts.bitter(
-                textStyle: const TextStyle(
-                    color: Color.fromARGB(255, 244, 221, 177),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600)),
           ),
         ),
         endDrawer: NavigationDrawer(
@@ -96,7 +92,7 @@ class _AnimalList extends State<AnimalList> {
                               fontWeight: FontWeight.w600)),
                     )))),
             ListTile(
-              title: const Text("Add New"),
+              title: const Text("Add New Barn or Animal"),
               onTap: () {
                 showDialog(
                     context: context,
@@ -104,17 +100,9 @@ class _AnimalList extends State<AnimalList> {
                       return AlertDialog(
                           title: const Text('Add New'),
                           content: SizedBox(
-                              height: 200,
-                              child: Column(children: [
-                                TextButton(
-                                    onPressed: () async {
-                                      await Navigator.of(ctx).push(
-                                          MaterialPageRoute(
-                                              builder: (ctx) =>
-                                                  const CreatePersonForm()));
-                                      setState(() {});
-                                    },
-                                    child: const Text('Add Person')),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
                                 TextButton(
                                     onPressed: () async {
                                       await Navigator.of(ctx).push(
@@ -122,6 +110,7 @@ class _AnimalList extends State<AnimalList> {
                                               builder: (ctx) =>
                                                   const CreateBarnForm()));
                                       setState(() {});
+                                      Navigator.of(ctx).pop();
                                     },
                                     child: const Text('Add Barn')),
                                 TextButton(
@@ -131,12 +120,91 @@ class _AnimalList extends State<AnimalList> {
                                               builder: (ctx) =>
                                                   const CreateAnimalForm()));
                                       setState(() {});
+                                      Navigator.of(ctx).pop();
                                     },
                                     child: const Text('Add Animal'))
                               ])));
                     });
               },
             ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            ),
+            ListTile(
+                title: const Text("Join Existing Barn"),
+                onTap: () {
+                  String barnToJoin = "";
+
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Join Barn'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                  "Enter the invite code for the barn\n you wish to join"),
+                              TextFormField(
+                                onChanged: (value) {
+                                  barnToJoin = value.trim();
+                                },
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        if (main.MyApp.barnList.isEmpty ||
+                                            main.MyApp.barnList
+                                                    .firstWhere(
+                                                        (element) =>
+                                                            element.id ==
+                                                            barnToJoin,
+                                                        orElse: () => Barn(
+                                                            id: "na",
+                                                            address: "",
+                                                            name: "",
+                                                            ownerid: "",
+                                                            phoneNumber: ""))
+                                                    .id ==
+                                                "na") {
+                                          linkPersonToBarn(barnToJoin);
+                                        }
+                                        setState(() {});
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      child: const Text(
+                                        'Join Barn',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 37, 109, 168)),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 37, 109, 168)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      });
+                  setState(() {});
+                }),
             Divider(
               height: 1,
               color: Colors.blueGrey.shade800,
@@ -168,6 +236,29 @@ class _AnimalList extends State<AnimalList> {
               color: Colors.blueGrey.shade800,
               thickness: 1,
             ),
+            ListTile(
+              title: const Text("Logout"),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+
+                main.MyApp.animals.isNotEmpty ? main.MyApp.animals.clear() : {};
+                main.MyApp.barnList.isNotEmpty
+                    ? main.MyApp.barnList.clear()
+                    : {};
+                main.MyApp.people.isNotEmpty ? main.MyApp.people.clear() : {};
+
+                // return to log in page
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.blueGrey.shade800,
+              thickness: 1,
+            )
           ],
         ),
         body: Container(
@@ -189,5 +280,37 @@ class _AnimalList extends State<AnimalList> {
     int index =
         main.MyApp.animals.indexWhere((element) => element.id == animal.id);
     main.MyApp.animals.removeAt(index);
+  }
+
+  Future<void> linkPersonToBarn(String barnid) async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnid);
+    DocumentReference personRef = FirebaseFirestore.instance
+        .collection('people')
+        .doc(main.MyApp.currentUser.id);
+
+    DocumentSnapshot barnInfo = await barnRef.get();
+    Map<String, dynamic> barn = barnInfo.data() as Map<String, dynamic>;
+    String ownerid = await getBarnOwner(barn['owner']);
+    main.MyApp.barnList.add(Barn(
+      id: barnRef.id,
+      address: barn['address'] ?? '',
+      name: barn['name'] ?? '',
+      phoneNumber: barn['number'] ?? '',
+      ownerid: ownerid,
+    ));
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
+  }
+
+  Future<String> getBarnOwner(DocumentReference ownerRef) async {
+    DocumentSnapshot ownerSnapshot = await ownerRef.get();
+    if (ownerSnapshot.exists) {
+      return ownerSnapshot.id;
+    } else {
+      return '';
+    }
   }
 }

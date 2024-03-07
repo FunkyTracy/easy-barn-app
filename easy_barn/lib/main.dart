@@ -1,25 +1,39 @@
 import 'package:easy_barn/animal_class.dart';
 import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import './barns_list_page.dart' as BarnListPage;
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static Person currentUser = Person(
+      id: "",
+      name: "",
+      phoneNumber: "",
+      emergencyPerson: "",
+      emergencyNumber: "",
+      uid: "");
+
   //hardcoded barns in barn_class
-  static List<Barn> barnList = List<Barn>.empty();
+  static List<Barn> barnList = List<Barn>.empty(growable: true);
   static Barn selectedBarn =
       Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
 
-  static List<Animal> animals = List<Animal>.empty();
+  static List<Animal> animals = List<Animal>.empty(growable: true);
   static Animal selectedAnimal = Animal(
       id: "",
       description: "",
@@ -31,13 +45,14 @@ class MyApp extends StatefulWidget {
       name: "",
       ownerid: "");
 
-  static List<Person> people = List<Person>.empty();
+  static List<Person> people = List<Person>.empty(growable: true);
   static Person selectedPerson = Person(
       id: "",
       name: "",
       phoneNumber: "",
       emergencyPerson: "",
-      emergencyNumber: "");
+      emergencyNumber: "",
+      uid: "");
 
   @override
   State<MyApp> createState() => _MyApp();
@@ -91,21 +106,30 @@ class _MyApp extends State<MyApp> {
     return MaterialApp(
         title: 'EasyBarn',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 226, 157, 30)),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Color.fromARGB(255, 51, 91, 122),
+              titleTextStyle: GoogleFonts.bitter(
+                  textStyle: const TextStyle(
+                      color: Color.fromARGB(255, 244, 221, 177),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600))),
+          inputDecorationTheme: const InputDecorationTheme(
+              border: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 51, 91, 122)))),
           useMaterial3: true,
         ),
-        home: FutureBuilder<List<Barn>>(
-            future: getBarnsFromDatabase(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (!(snapshot.data == null)) {
-                MyApp.barnList = snapshot.data!;
-                return const BarnListPage.BarnList();
-              } else {
-                return Text('Error: ${snapshot.error}');
-              }
-            }));
+        home: const LoginPage());
+  }
+
+  Future<void> linkPersonToBarn(String barnid) async {
+    DocumentReference barnRef =
+        FirebaseFirestore.instance.collection('barns').doc(barnid);
+    DocumentReference personRef =
+        FirebaseFirestore.instance.collection('people').doc();
+
+    FirebaseFirestore.instance
+        .collection('barn_to_person')
+        .add({'barnid': barnRef, 'personid': personRef});
   }
 }

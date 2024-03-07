@@ -1,7 +1,7 @@
 import 'package:easy_barn/edit_barn_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 class BarnDetailPage extends StatefulWidget {
   const BarnDetailPage({super.key});
@@ -15,14 +15,8 @@ class _BarnDetailPage extends State<BarnDetailPage> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
-          title: Text(
+          title: const Text(
             "Easy Barn",
-            style: GoogleFonts.bitter(
-                textStyle: const TextStyle(
-                    color: Color.fromARGB(255, 244, 221, 177),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600)),
           ),
           actions: <Widget>[
             Padding(
@@ -79,6 +73,17 @@ class _BarnDetailPage extends State<BarnDetailPage> {
                     borderRadius: BorderRadius.circular(10)),
                 title: Text(MyApp.selectedBarn.phoneNumber),
                 subtitle: const Text("Phone Number"),
+              )),
+              Card(
+                  child: ListTile(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text(MyApp.selectedBarn.id),
+                subtitle: const Text(
+                    "Barn Invite Code - Press and Hold to copy to clipboard"),
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: MyApp.selectedBarn.id));
+                },
               )),
             ])));
   }

@@ -1,7 +1,6 @@
 import 'package:easy_barn/edit_person_form.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class PersonDetailPage extends StatefulWidget {
   const PersonDetailPage({super.key});
@@ -16,14 +15,8 @@ class _PersonDetailPage extends State<PersonDetailPage> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 244, 221, 177),
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
-          title: Text(
+          title: const Text(
             "Easy Barn",
-            style: GoogleFonts.bitter(
-                textStyle: const TextStyle(
-                    color: Color.fromARGB(255, 244, 221, 177),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600)),
           ),
           actions: <Widget>[
             Padding(
