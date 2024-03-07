@@ -177,7 +177,19 @@ class _LoginPage extends State<LoginPage> {
         future: getBarnsFromDatabase(uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/pexels-brandon-randolph-2042161.jpg'),
+                      fit: BoxFit.cover,
+                      opacity: 0.5)),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromARGB(255, 51, 91, 122),
+                ),
+              ),
+            );
           } else if (!(snapshot.data == null)) {
             MyApp.barnList = snapshot.data!;
             return const BarnList();
