@@ -1,3 +1,5 @@
+// ignore_for_file: unused_catch_clause, use_build_context_synchronously
+
 import 'package:easy_barn/login/log_in_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,7 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage> {
         body: FormBuilder(
             key: _forgotFormKey,
             child: Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Center(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,43 +63,45 @@ class _ForgotPasswordPage extends State<ForgotPasswordPage> {
                           }
                         },
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       ElevatedButton(
                           onPressed: () async {
                             if (_forgotFormKey.currentState!
                                 .saveAndValidate()) {
                               try {
-                                final status = await FirebaseAuth.instance
+                                await FirebaseAuth.instance
                                     .sendPasswordResetEmail(email: email);
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
+                                      builder: (context) => const LoginPage()),
                                 );
                               } on PlatformException catch (e) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
+                                      builder: (context) => const LoginPage()),
                                 );
                               } on FirebaseAuthException catch (e) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
+                                      builder: (context) => const LoginPage()),
                                 );
                               }
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 51, 91, 122),
+                            backgroundColor:
+                                const Color.fromARGB(255, 51, 91, 122),
                             foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(horizontal: 80.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 80.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                           ),
-                          child: Text('Send Update Password Link'))
+                          child: const Text('Send Update Password Link'))
                     ])))));
   }
 }

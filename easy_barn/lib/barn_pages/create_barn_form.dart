@@ -1,7 +1,9 @@
+// ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
 import 'package:easy_barn/main.dart';
-import 'package:easy_barn/person_class.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -36,7 +38,7 @@ class _CreateBarnForm extends State<CreateBarnForm> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          backgroundColor: const Color.fromARGB(255, 51, 91, 122),
           title: Text(
             "Easy Barn",
             style: GoogleFonts.bitter(
@@ -54,7 +56,7 @@ class _CreateBarnForm extends State<CreateBarnForm> {
                 _createBarnFormKey.currentState!.save();
               },
               child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: <Widget>[
                       FormBuilderTextField(
@@ -85,7 +87,7 @@ class _CreateBarnForm extends State<CreateBarnForm> {
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'phone',
                         maxLines: null,
@@ -115,7 +117,7 @@ class _CreateBarnForm extends State<CreateBarnForm> {
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'address',
                         maxLines: null,
@@ -147,7 +149,7 @@ class _CreateBarnForm extends State<CreateBarnForm> {
                       ),
                     ],
                   ))),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Row(
             children: <Widget>[
               Expanded(

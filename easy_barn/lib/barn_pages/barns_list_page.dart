@@ -1,16 +1,18 @@
+// ignore_for_file: use_build_context_synchronously, library_prefixes
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/animal_class.dart';
-import 'package:easy_barn/barn_class.dart';
-import 'package:easy_barn/create_animal_form.dart';
-import 'package:easy_barn/create_barn_form.dart';
+import 'package:easy_barn/animal_pages/animal_class.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
+import 'package:easy_barn/animal_pages/create_animal_form.dart';
+import 'package:easy_barn/barn_pages/create_barn_form.dart';
 import 'package:easy_barn/login/log_in_page.dart';
-import 'package:easy_barn/person_class.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import './animal_list_page.dart' as animalList;
+import '../animal_pages/animal_list_page.dart' as animalList;
 import 'barn_class.dart' as barnClass;
-import 'main.dart' as main;
+import '../main.dart' as main;
 
 class BarnList extends StatefulWidget {
   const BarnList({super.key});
@@ -91,8 +93,8 @@ class _BarnList extends State<BarnList> {
           SizedBox(
               height: 80,
               child: DrawerHeader(
-                  decoration:
-                      BoxDecoration(color: Color.fromARGB(255, 51, 91, 122)),
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 51, 91, 122)),
                   child: Center(
                       child: Text(
                     'Menu',
@@ -233,7 +235,7 @@ class _BarnList extends State<BarnList> {
               // return to log in page with clear navigation routes
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                   (route) => false);
             },
           ),

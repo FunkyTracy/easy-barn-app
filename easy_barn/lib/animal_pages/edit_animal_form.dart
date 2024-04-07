@@ -1,5 +1,7 @@
+// ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/animal_pages/animal_class.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -46,7 +48,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          backgroundColor: const Color.fromARGB(255, 51, 91, 122),
           title: Text(
             "Easy Barn",
             style: GoogleFonts.bitter(
@@ -72,7 +74,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                 'farrier': MyApp.selectedAnimal.farrier
               },
               child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: <Widget>[
                       FormBuilderTextField(
@@ -103,7 +105,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderDropdown(
                           name: 'owner',
                           decoration: InputDecoration(
@@ -117,12 +119,12 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                               [FormBuilderValidators.required()]),
                           items: MyApp.people
                               .map((person) => DropdownMenuItem(
-                                    child: Text(person.name),
                                     value: person,
                                     alignment: AlignmentDirectional.center,
                                     onTap: () {
                                       newOwnerId = person.id;
                                     },
+                                    child: Text(person.name),
                                   ))
                               .toList(),
                           onChanged: (value) async {
@@ -133,7 +135,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                                   false);
                             });
                           }),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'description',
                         maxLines: null,
@@ -163,7 +165,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'stall_location',
                         maxLines: null,
@@ -193,7 +195,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'feeding',
                         maxLines: null,
@@ -223,7 +225,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'meds',
                         maxLines: null,
@@ -253,7 +255,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'vet',
                         maxLines: null,
@@ -283,7 +285,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'farrier',
                         maxLines: null,
@@ -315,7 +317,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                       ),
                     ],
                   ))),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Row(
             children: <Widget>[
               Expanded(

@@ -1,6 +1,6 @@
-import 'package:easy_barn/edit_animal_form.dart';
+import 'package:easy_barn/animal_pages/edit_animal_form.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main.dart';
 
 class AnimalDetailPage extends StatefulWidget {
   const AnimalDetailPage({super.key});
@@ -13,7 +13,7 @@ class _AnimalDetailPage extends State<AnimalDetailPage> {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 244, 221, 177),
+        backgroundColor: const Color.fromARGB(255, 244, 221, 177),
         appBar: AppBar(
           title: const Text(
             "Easy Barn",

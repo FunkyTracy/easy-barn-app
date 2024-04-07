@@ -1,10 +1,12 @@
+// ignore_for_file: unused_catch_clause, unnecessary_string_escapes, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/barn_class.dart';
-import 'package:easy_barn/barns_list_page.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
+import 'package:easy_barn/barn_pages/barns_list_page.dart';
 import 'package:easy_barn/login/forgot_password.dart';
 import 'package:easy_barn/login/registration_page.dart';
 import 'package:easy_barn/main.dart';
-import 'package:easy_barn/person_class.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -41,7 +43,7 @@ class _LoginPage extends State<LoginPage> {
       child: FormBuilder(
         key: _loginFormKey,
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +85,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                   },
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 FormBuilderTextField(
                   name: 'password',
                   obscureText: true,
@@ -110,7 +112,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                   },
                 ),
-                SizedBox(height: 30.0),
+                const SizedBox(height: 30.0),
                 ElevatedButton(
                   onPressed: () async {
                     if (_loginFormKey.currentState!.saveAndValidate()) {
@@ -139,22 +141,22 @@ class _LoginPage extends State<LoginPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 51, 91, 122),
+                    backgroundColor: const Color.fromARGB(255, 51, 91, 122),
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 80.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 80.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
-                  child: Text('Login'),
+                  child: const Text('Login'),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => RegistrationPage()),
+                          builder: (context) => const RegistrationPage()),
                     );
                   },
                   child: const Text(
@@ -165,13 +167,13 @@ class _LoginPage extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgotPasswordPage()),
+                          builder: (context) => const ForgotPasswordPage()),
                     );
                   },
                   child: const Text(

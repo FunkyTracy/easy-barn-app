@@ -1,16 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/barn_class.dart';
-import 'package:easy_barn/barn_details_page.dart';
-import 'package:easy_barn/create_animal_form.dart';
-import 'package:easy_barn/create_barn_form.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
+import 'package:easy_barn/barn_pages/barn_details_page.dart';
+import 'package:easy_barn/animal_pages/create_animal_form.dart';
+import 'package:easy_barn/barn_pages/create_barn_form.dart';
 import 'package:easy_barn/login/log_in_page.dart';
-import 'package:easy_barn/person_list.dart';
+import 'package:easy_barn/person_pages/person_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'animal_class.dart';
 import 'animal_detail_page.dart';
-import 'main.dart' as main;
+import '../main.dart' as main;
 
 class AnimalList extends StatefulWidget {
   final String name;
@@ -92,8 +94,8 @@ class _AnimalList extends State<AnimalList> {
             SizedBox(
                 height: 80,
                 child: DrawerHeader(
-                    decoration:
-                        BoxDecoration(color: Color.fromARGB(255, 51, 91, 122)),
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 51, 91, 122)),
                     child: Center(
                         child: Text(
                       'Menu',
@@ -262,7 +264,7 @@ class _AnimalList extends State<AnimalList> {
                 // return to log in page with clear navigation routes
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                     (route) => false);
               },
             ),

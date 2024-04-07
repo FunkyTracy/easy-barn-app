@@ -1,5 +1,7 @@
+// ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -36,7 +38,7 @@ class _EditBarnForm extends State<EditBarnForm> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          backgroundColor: const Color.fromARGB(255, 51, 91, 122),
           title: Text(
             "Easy Barn",
             style: GoogleFonts.bitter(
@@ -61,7 +63,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                     (person) => person.id == MyApp.selectedBarn.ownerid),
               },
               child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(children: <Widget>[
                     FormBuilderTextField(
                       name: 'name',
@@ -91,7 +93,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     FormBuilderTextField(
                       name: 'phone',
                       maxLines: null,
@@ -121,7 +123,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     FormBuilderTextField(
                       name: 'address',
                       maxLines: null,
@@ -151,7 +153,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                       keyboardType: TextInputType.streetAddress,
                       textInputAction: TextInputAction.next,
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     FormBuilderDropdown(
                         name: 'owner',
                         decoration: InputDecoration(
@@ -164,12 +166,12 @@ class _EditBarnForm extends State<EditBarnForm> {
                             [FormBuilderValidators.required()]),
                         items: MyApp.people
                             .map((person) => DropdownMenuItem(
-                                  child: Text(person.name),
                                   value: person,
                                   alignment: AlignmentDirectional.center,
                                   onTap: () {
                                     newOwnerId = person.id;
                                   },
+                                  child: Text(person.name),
                                 ))
                             .toList(),
                         onChanged: (value) async {
@@ -180,7 +182,7 @@ class _EditBarnForm extends State<EditBarnForm> {
                                 false);
                           });
                         }),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Row(
                       children: <Widget>[
                         Expanded(

@@ -1,6 +1,8 @@
+// ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/login/log_in_page.dart';
-import 'package:easy_barn/person_class.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -33,7 +35,7 @@ class _RegistrationPage extends State<RegistrationPage> {
   bool _emergencyPersonHasError = false;
   bool _emergencyPhoneHasError = false;
   bool _emailHasError = false;
-  bool _passwordHasError = false;
+  final bool _passwordHasError = false;
   bool _passwordConfirmationHasError = false;
 
   @override
@@ -42,7 +44,7 @@ class _RegistrationPage extends State<RegistrationPage> {
       body: FormBuilder(
         key: _registrationFormKey,
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -56,13 +58,13 @@ class _RegistrationPage extends State<RegistrationPage> {
                             fontSize: 35,
                             fontWeight: FontWeight.w600)),
                   ),
-                  SizedBox(height: 30.0),
+                  const SizedBox(height: 30.0),
                   FormBuilderTextField(
                     name: 'full_name',
                     decoration: InputDecoration(
                       hintText: 'Enter your full name',
                       labelText: 'Full Name',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       suffixIcon: _fullNameHasError
                           ? const Icon(Icons.error, color: Colors.red)
                           : const Icon(Icons.check, color: Colors.green),
@@ -84,13 +86,13 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'phone_number',
                     decoration: InputDecoration(
                         hintText: 'Enter your phone number',
                         labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _phoneNumberHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -112,13 +114,13 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'emergency_contact',
                     decoration: InputDecoration(
                         hintText: 'Enter your emergency contact',
                         labelText: 'Emergency Contact Name',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _emergencyPersonHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -139,14 +141,14 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'emergency_contact_phone',
                     decoration: InputDecoration(
                         hintText:
                             'Enter your emergency contact\'s phone number',
                         labelText: 'Emergency Contact\'s Phone Number',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _emergencyPhoneHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -168,13 +170,13 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'email',
                     decoration: InputDecoration(
                         hintText: 'Enter your email',
                         labelText: 'Email',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _emailHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -194,14 +196,14 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'password',
                     obscureText: true,
                     decoration: InputDecoration(
                         hintText: 'Enter your password',
                         labelText: 'Password',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _passwordHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -211,14 +213,14 @@ class _RegistrationPage extends State<RegistrationPage> {
                       FormBuilderValidators.minLength(6),
                     ]),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   FormBuilderTextField(
                     name: 'confirm_password',
                     obscureText: true,
                     decoration: InputDecoration(
                         hintText: 'Re-enter your password',
                         labelText: 'Confirm Password',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         suffixIcon: _passwordConfirmationHasError
                             ? const Icon(Icons.error, color: Colors.red)
                             : const Icon(Icons.check, color: Colors.green)),
@@ -245,7 +247,7 @@ class _RegistrationPage extends State<RegistrationPage> {
                       }
                     },
                   ),
-                  SizedBox(height: 30.0),
+                  const SizedBox(height: 30.0),
                   ElevatedButton(
                     onPressed: () async {
                       if (_registrationFormKey.currentState!
@@ -255,29 +257,31 @@ class _RegistrationPage extends State<RegistrationPage> {
 
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 51, 91, 122),
+                      backgroundColor: const Color.fromARGB(255, 51, 91, 122),
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 80.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 80.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: Text('Register'),
+                    child: const Text('Register'),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Already have an account? Login here',
                       style: TextStyle(
                         color: Color.fromARGB(255, 51, 91, 122),

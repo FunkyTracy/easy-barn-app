@@ -1,4 +1,4 @@
-import 'package:easy_barn/edit_barn_page.dart';
+import 'package:easy_barn/barn_pages/edit_barn_page.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

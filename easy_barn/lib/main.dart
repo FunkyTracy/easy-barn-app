@@ -1,7 +1,7 @@
-import 'package:easy_barn/animal_class.dart';
-import 'package:easy_barn/barn_class.dart';
+import 'package:easy_barn/animal_pages/animal_class.dart';
+import 'package:easy_barn/barn_pages/barn_class.dart';
 import 'package:easy_barn/login/log_in_page.dart';
-import 'package:easy_barn/person_class.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -107,7 +107,7 @@ class _MyApp extends State<MyApp> {
         title: 'EasyBarn',
         theme: ThemeData(
           appBarTheme: AppBarTheme(
-              backgroundColor: Color.fromARGB(255, 51, 91, 122),
+              backgroundColor: const Color.fromARGB(255, 51, 91, 122),
               titleTextStyle: GoogleFonts.bitter(
                   textStyle: const TextStyle(
                       color: Color.fromARGB(255, 244, 221, 177),

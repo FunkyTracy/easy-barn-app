@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/person_class.dart';
-import 'package:easy_barn/person_detail_page.dart';
+import 'package:easy_barn/person_pages/person_class.dart';
+import 'package:easy_barn/person_pages/person_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'main.dart' as main;
+import '../main.dart' as main;
 
 class PeopleList extends StatefulWidget {
   const PeopleList({super.key});

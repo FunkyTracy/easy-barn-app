@@ -1,8 +1,9 @@
+// ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_barn/animal_class.dart';
+import 'package:easy_barn/animal_pages/animal_class.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,7 +48,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          backgroundColor: const Color.fromARGB(255, 51, 91, 122),
           title: Text(
             "Easy Barn",
             style: GoogleFonts.bitter(
@@ -65,7 +66,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                 _createAnimalFormKey.currentState!.save();
               },
               child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: <Widget>[
                       FormBuilderTextField(
@@ -96,7 +97,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderDropdown(
                         name: 'placement_barn',
                         decoration: InputDecoration(
@@ -109,12 +110,12 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                             [FormBuilderValidators.required()]),
                         items: MyApp.barnList
                             .map((barn) => DropdownMenuItem(
-                                  child: Text(barn.name),
                                   value: barn,
                                   alignment: AlignmentDirectional.center,
                                   onTap: () {
                                     barnId = barn.id;
                                   },
+                                  child: Text(barn.name),
                                 ))
                             .toList(),
                         onChanged: (value) {
@@ -126,7 +127,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                           });
                         },
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'description',
                         maxLines: null,
@@ -156,7 +157,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'stall_location',
                         maxLines: null,
@@ -186,7 +187,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'feeding',
                         maxLines: null,
@@ -216,7 +217,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'meds',
                         maxLines: null,
@@ -246,7 +247,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'vet',
                         maxLines: null,
@@ -276,7 +277,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'farrier',
                         maxLines: null,
@@ -306,7 +307,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       FormBuilderDropdown(
                         name: 'owner',
                         decoration: const InputDecoration(
@@ -321,7 +322,7 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
                       ),
                     ],
                   ))),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Row(
             children: <Widget>[
               Expanded(

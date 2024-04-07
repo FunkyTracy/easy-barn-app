@@ -1,4 +1,4 @@
-import 'package:easy_barn/edit_person_form.dart';
+import 'package:easy_barn/person_pages/edit_person_form.dart';
 import 'package:easy_barn/main.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class _PersonDetailPage extends State<PersonDetailPage> {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 244, 221, 177),
+        backgroundColor: const Color.fromARGB(255, 244, 221, 177),
         appBar: AppBar(
           title: const Text(
             "Easy Barn",
