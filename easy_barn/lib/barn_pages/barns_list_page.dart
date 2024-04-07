@@ -47,7 +47,7 @@ class _BarnList extends State<BarnList> {
                         title: const Text('Delete Barn'),
                         content: const Text(
                             'You are about to delete the selected Barn which will delete all animals'
-                            'within it and remove the barn from any boarders\' accounts.\n'
+                            ' within it and remove the barn from any boarders\' accounts.\n'
                             'Is this really what you want?'),
                         actions: [
                           TextButton(
