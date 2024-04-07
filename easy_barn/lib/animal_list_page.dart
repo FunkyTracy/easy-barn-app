@@ -40,29 +40,41 @@ class _AnimalList extends State<AnimalList> {
             setState(() {});
           },
           onLongPress: () async {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Delete Animal'),
-                    content: const Text(
-                        'You are about to delete the selected animal.\n Is this really what you want?'),
-                    actions: [
-                      TextButton(
-                          onPressed: () async {
-                            await deleteAnimal(animal);
-                            Navigator.pop(context);
-                            setState(() {});
-                          },
-                          child: const Text('Delete')),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'))
-                    ],
-                  );
-                });
+            if (main.MyApp.currentUser.id == main.MyApp.selectedBarn.ownerid) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Delete Animal'),
+                      content: const Text(
+                          'You are about to delete the selected animal.\n Is this really what you want?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () async {
+                              await deleteAnimal(animal);
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                            child: const Text('Delete')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'))
+                      ],
+                    );
+                  });
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      title: Text('Delete Animal'),
+                      content: Text(
+                          "If you wish for this animal to be removed from the barn, please contact the barn owner"),
+                    );
+                  });
+            }
           },
         ));
       });

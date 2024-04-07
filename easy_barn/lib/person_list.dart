@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/person_class.dart';
 import 'package:easy_barn/person_detail_page.dart';
@@ -29,32 +31,55 @@ class _PeopleList extends State<PeopleList> {
               setState(() {});
             },
             onLongPress: () async {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Delete Person'),
-                      content: const Text(
-                          'You are about to delete the selected Perosn which will delete all animals '
-                          'they own within the barn and remove them from the boarders list.\n'
-                          'This will not delete their account.\n'
-                          'Is this really what you want?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () async {
-                              await deletePerson(person);
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                            child: const Text('Delete')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Cancel'))
-                      ],
-                    );
-                  });
+              if (main.MyApp.currentUser.id == person.id) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Delete Person'),
+                        content:
+                            Text("You can't remove yourself from the barn"),
+                      );
+                    });
+              } else if (main.MyApp.currentUser.id ==
+                  main.MyApp.selectedBarn.ownerid) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Delete Person'),
+                        content: const Text(
+                            'You are about to delete the selected Perosn which will delete all animals '
+                            'they own within the barn and remove them from the boarders list.\n'
+                            'This will not delete their account.\n'
+                            'Is this really what you want?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () async {
+                                await deletePerson(person);
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
+                              child: const Text('Delete')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'))
+                        ],
+                      );
+                    });
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Delete Person'),
+                        content: Text(
+                            "If you wish for this person to be removed from the barn, please contact the barn owner"),
+                      );
+                    });
+              }
             },
           ),
         );
@@ -64,7 +89,7 @@ class _PeopleList extends State<PeopleList> {
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 51, 91, 122),
+          backgroundColor: const Color.fromARGB(255, 51, 91, 122),
           title: Text(
             "Easy Barn",
             style: GoogleFonts.bitter(
