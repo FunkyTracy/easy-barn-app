@@ -226,7 +226,9 @@ class _EditBarnForm extends State<EditBarnForm> {
   }
 
   Future<void> updateBarnDatabase() async {
-    MyApp.selectedBarn.ownerid = newOwnerId;
+    if (newOwnerId.isNotEmpty) {
+      MyApp.selectedBarn.ownerid = newOwnerId;
+    }
 
     Barn temp = MyApp.barnList
         .firstWhere((element) => element.id == MyApp.selectedBarn.id);

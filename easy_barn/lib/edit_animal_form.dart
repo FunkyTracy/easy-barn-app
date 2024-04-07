@@ -355,7 +355,9 @@ class _EditAnimalForm extends State<EditAnimalForm> {
   }
 
   Future<void> updateAnimals() async {
-    MyApp.selectedAnimal.ownerid = newOwnerId;
+    if (newOwnerId.isNotEmpty) {
+      MyApp.selectedAnimal.ownerid = newOwnerId;
+    }
 
     Animal found = MyApp.animals
         .firstWhere((element) => element.id == MyApp.selectedAnimal.id);

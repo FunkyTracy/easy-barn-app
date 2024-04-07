@@ -247,11 +247,11 @@ class _AnimalList extends State<AnimalList> {
                     : {};
                 main.MyApp.people.isNotEmpty ? main.MyApp.people.clear() : {};
 
-                // return to log in page
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
+                // return to log in page with clear navigation routes
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false);
               },
             ),
             Divider(
