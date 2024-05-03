@@ -42,7 +42,8 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
       vet: "",
       farrier: "",
       name: "",
-      ownerid: MyApp.currentUser.id);
+      ownerid: MyApp.currentUser.id,
+      photoLocation: 'jumping-horse-silhouette-facing-left-side-view.png');
 
   @override
   Widget build(BuildContext ctx) {

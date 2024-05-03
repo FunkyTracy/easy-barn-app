@@ -8,6 +8,7 @@ class Animal {
   String medications;
   String vet;
   String farrier;
+  String photoLocation;
 
   Animal(
       {required this.id,
@@ -18,7 +19,8 @@ class Animal {
       required this.vet,
       required this.farrier,
       required this.name,
-      required this.ownerid});
+      required this.ownerid,
+      required this.photoLocation});
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,7 +30,8 @@ class Animal {
       'feeding': feedingInstructions,
       'medications': medications,
       'stall': stall,
-      'vet': vet
+      'vet': vet,
+      'photo': photoLocation
     };
   }
 }

@@ -284,7 +284,9 @@ class _BarnList extends State<BarnList> {
           vet: item['vet'] ?? "",
           farrier: item['farrier'] ?? "",
           name: item['name'] ?? "",
-          ownerid: await getAnimalOwner(item['owner']));
+          ownerid: await getAnimalOwner(item['owner']),
+          photoLocation: item['photo'] ??
+              "gs://easybarn-21756.appspot.com/jumping-horse-silhouette-facing-left-side-view.png");
 
       animalsTemp.add(temp);
     }

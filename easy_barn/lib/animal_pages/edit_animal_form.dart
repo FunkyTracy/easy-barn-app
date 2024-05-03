@@ -1,12 +1,17 @@
 // ignore_for_file: unnecessary_string_escapes, use_build_context_synchronously, avoid_print
 
+import 'dart:io';
+import 'package:cross_file/cross_file.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_barn/animal_pages/animal_class.dart';
 import 'package:easy_barn/main.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:path/path.dart' as path;
 
 // '[^\s!@#\$%^&*(){}[]:;\'"<>?/\\_]+'
 
@@ -40,9 +45,11 @@ class _EditAnimalForm extends State<EditAnimalForm> {
       vet: MyApp.selectedAnimal.vet,
       farrier: MyApp.selectedAnimal.farrier,
       name: MyApp.selectedAnimal.name,
-      ownerid: MyApp.selectedAnimal.ownerid);
+      ownerid: MyApp.selectedAnimal.ownerid,
+      photoLocation: MyApp.selectedAnimal.photoLocation);
 
   String newOwnerId = "";
+  String newImage = "";
 
   @override
   Widget build(BuildContext ctx) {
@@ -77,6 +84,20 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: <Widget>[
+                      FormBuilderImagePicker(
+                        name: 'image',
+                        decoration: const InputDecoration(
+                          labelText: 'Choose Animal Photo',
+                        ),
+                        maxImages: 1,
+                        onSaved: (value) {
+                          if (value != null) {
+                            XFile file = value.first;
+                            newImage = file.path;
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20.0),
                       FormBuilderTextField(
                         name: 'name',
                         maxLines: null,
@@ -325,6 +346,7 @@ class _EditAnimalForm extends State<EditAnimalForm> {
                   onPressed: () async {
                     if (_animalFormKey.currentState?.saveAndValidate() ??
                         false) {
+                      await storeImage(newImage);
                       await updateAnimals();
                       debugPrint(_animalFormKey.currentState?.value.toString());
                       Navigator.of(ctx).maybePop();
@@ -381,9 +403,23 @@ class _EditAnimalForm extends State<EditAnimalForm> {
           'medications': MyApp.selectedAnimal.medications,
           'stall': MyApp.selectedAnimal.stall,
           'vet': MyApp.selectedAnimal.vet,
-          'owner': ownerRef
+          'owner': ownerRef,
+          'photo': MyApp.selectedAnimal.photoLocation
         })
         .then((value) => print('Updated successfully'))
         .catchError((error) => print('Failed to update: $error'));
+  }
+
+  Future<void> storeImage(String filePath) async {
+    if (filePath != "") {
+      String photoName = path.basename(filePath);
+
+      Reference imageRef = MyApp.firebaseStorage.ref().child(photoName);
+
+      File img = File(filePath);
+      await imageRef.putFile(img);
+
+      MyApp.selectedAnimal.photoLocation = photoName;
+    }
   }
 }

@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+// Default horse icon used within application <a href="https://www.flaticon.com/free-icons/horse" title="horse icons">Horse icons created by Freepik - Flaticon</a>
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,8 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  static FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   static Person currentUser = Person(
       id: "",
@@ -43,7 +47,8 @@ class MyApp extends StatefulWidget {
       vet: "",
       farrier: "",
       name: "",
-      ownerid: "");
+      ownerid: "",
+      photoLocation: "");
 
   static List<Person> people = List<Person>.empty(growable: true);
   static Person selectedPerson = Person(
@@ -65,42 +70,6 @@ class _MyApp extends State<MyApp> {
     );
   }
 
-  Future<String> getBarnOwner(DocumentReference ownerRef) async {
-    DocumentSnapshot ownerSnapshot = await ownerRef.get();
-    if (ownerSnapshot.exists) {
-      return ownerSnapshot.id;
-    } else {
-      return '';
-    }
-  }
-
-  Future<List<Barn>> getBarnsFromDatabase() async {
-    await initializeFirebase();
-    List<Barn> barns = [];
-
-    QuerySnapshot qs =
-        await FirebaseFirestore.instance.collection('barns').get();
-
-    for (QueryDocumentSnapshot barnDoc in qs.docs) {
-      Barn barn =
-          Barn(id: "", address: "", name: "", ownerid: "", phoneNumber: "");
-
-      barn.id = barnDoc.id;
-
-      Map<String, dynamic> item = barnDoc.data() as Map<String, dynamic>;
-      barn.name = item['name'] ?? '';
-      barn.address = item['address'] ?? '';
-      barn.phoneNumber = item['number'] ?? '';
-      barn.ownerid = await getBarnOwner(item['owner']);
-
-      barns.add(barn);
-    }
-
-    MyApp.barnList = barns;
-
-    return barns;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -120,16 +89,5 @@ class _MyApp extends State<MyApp> {
           useMaterial3: true,
         ),
         home: const LoginPage());
-  }
-
-  Future<void> linkPersonToBarn(String barnid) async {
-    DocumentReference barnRef =
-        FirebaseFirestore.instance.collection('barns').doc(barnid);
-    DocumentReference personRef =
-        FirebaseFirestore.instance.collection('people').doc();
-
-    FirebaseFirestore.instance
-        .collection('barn_to_person')
-        .add({'barnid': barnRef, 'personid': personRef});
   }
 }

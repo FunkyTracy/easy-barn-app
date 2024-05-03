@@ -8,6 +8,7 @@ import 'package:easy_barn/barn_pages/create_barn_form.dart';
 import 'package:easy_barn/login/log_in_page.dart';
 import 'package:easy_barn/person_pages/person_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'animal_class.dart';
@@ -31,6 +32,26 @@ class _AnimalList extends State<AnimalList> {
 
         return Card(
             child: ListTile(
+          leading: Container(
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child: CircleAvatar(
+                  child: FutureBuilder(
+                future: getAnimalImage(animal.photoLocation),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // While waiting for the image, you can show a placeholder
+                    return const CircleAvatar(
+                      backgroundColor: Colors.white,
+                    );
+                  } else if (snapshot.hasError) {
+                    // Handle error if any
+                    return const Icon(Icons.error);
+                  } else {
+                    // Once the image is loaded, display it
+                    return CircleAvatar(backgroundImage: snapshot.data!.image);
+                  }
+                },
+              ))),
           title: Text(animal.name),
           subtitle: Text(main.MyApp.people
               .firstWhere((person) => person.id == animal.ownerid)
@@ -185,7 +206,7 @@ class _AnimalList extends State<AnimalList> {
                                                             phoneNumber: ""))
                                                     .id ==
                                                 "na") {
-                                          linkPersonToBarn(barnToJoin);
+                                          await linkPersonToBarn(barnToJoin);
                                         }
                                         setState(() {});
                                         Navigator.of(ctx).pop();
@@ -326,5 +347,13 @@ class _AnimalList extends State<AnimalList> {
     } else {
       return '';
     }
+  }
+
+  Future<Image> getAnimalImage(String imageUrl) async {
+    Reference imageRef = main.MyApp.firebaseStorage.ref().child(imageUrl);
+
+    String url = await imageRef.getDownloadURL();
+
+    return Image.network(url);
   }
 }
