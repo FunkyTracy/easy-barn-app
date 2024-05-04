@@ -380,7 +380,8 @@ class _CreateAnimalForm extends State<CreateAnimalForm> {
       'stall': newAnimal.stall,
       'vet': newAnimal.vet,
       'barn': barnRef,
-      'owner': personRef
+      'owner': personRef,
+      'photo': "jumping-horse-silhouette-facing-left-side-view.png",
     });
 
     newAnimal.id = animalRef.id;

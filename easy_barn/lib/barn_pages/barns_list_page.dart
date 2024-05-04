@@ -46,7 +46,7 @@ class _BarnList extends State<BarnList> {
                       return AlertDialog(
                         title: const Text('Delete Barn'),
                         content: const Text(
-                            'You are about to delete the selected Barn which will delete all animals'
+                            'You are about to delete the selected barn which will delete all animals'
                             ' within it and remove the barn from any boarders\' accounts.\n'
                             'Is this really what you want?'),
                         actions: [
@@ -286,7 +286,7 @@ class _BarnList extends State<BarnList> {
           name: item['name'] ?? "",
           ownerid: await getAnimalOwner(item['owner']),
           photoLocation: item['photo'] ??
-              "gs://easybarn-21756.appspot.com/jumping-horse-silhouette-facing-left-side-view.png");
+              "jumping-horse-silhouette-facing-left-side-view.png");
 
       animalsTemp.add(temp);
     }
