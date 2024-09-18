@@ -7,7 +7,7 @@ Use this application to:
 -   Manage a professional boarding facility
 -   Create an easy way to share farm care instructions with a sitter
 
-Application will be released in June 2024
+Application will be released later in 2024
 
 Contributors
 Ashlyn Funk-Tracy
